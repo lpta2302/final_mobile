@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "485381923376",
+    "project_id": "hai-duong-test-firebase",
+    "storage_bucket": "hai-duong-test-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485381923376:android:a32bda578fd261d96703f5",
+        "android_client_info": {
+          "package_name": "vn.edu.ueh.thanhdnh.firebase_example"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtIIb5KjWI3iouFHLKx65S6NrPRdi5qAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

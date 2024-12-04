@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+    id("io.freefair.lombok") version "6.6"
 }
 
 android {
@@ -43,6 +44,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation ("org.projectlombok:lombok:1.18.24")  // Thêm Lombok vào đây
+
+    implementation("org.projectlombok:lombok:1.18.24")  // Thêm Lombok vào đây
     annotationProcessor("org.projectlombok:lombok:1.18.24")
+    implementation("org.springframework.security:spring-security-crypto:5.7.3")
 }
