@@ -1,13 +1,12 @@
 {
   "project_info": {
-    "project_number": "485381923376",
-    "project_id": "hai-duong-test-firebase",
-    "storage_bucket": "hai-duong-test-firebase.firebasestorage.app"
+    "project_number": "872447904916",
+    "project_id": "final-mobile-8339f",
+    "storage_bucket": "final-mobile-8339f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:485381923376:android:a32bda578fd261d96703f5",
         "android_client_info": {
           "package_name": "com.dev.mail.lpta2302.final_mobile"
         }
@@ -15,7 +14,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCtIIb5KjWI3iouFHLKx65S6NrPRdi5qAY"
+          "current_key": "AIzaSyDlXNPeqG0AzDlShZ_6ypYQRfXbUzT962k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872447904916:android:87174fdd28e8be3c9cb881",
+        "android_client_info": {
+          "package_name": "com.dev.mail.lpta2302.final_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlXNPeqG0AzDlShZ_6ypYQRfXbUzT962k"
         }
       ],
       "services": {
