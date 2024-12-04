@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "vn.edu.ueh.thanhdnh.firebase_example"
+    namespace = "com.dev.mail.lpta2302.final_mobile"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "vn.edu.ueh.thanhdnh.firebase_example"
+        applicationId = "com.dev.mail.lpta2302.final_mobile"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
@@ -45,7 +45,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    implementation("org.projectlombok:lombok:1.18.24")  // Thêm Lombok vào đây
-    annotationProcessor("org.projectlombok:lombok:1.18.24")
+    compileOnly("org.projectlombok:lombok:1.18.36")  // Thêm Lombok vào đây
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
     implementation("org.springframework.security:spring-security-crypto:5.7.3")
 }
