@@ -52,12 +52,9 @@ public class FriendService {
                 });
     }
 
-    public void findAll(User owner, int limit, int page, ExpectationAndException onResult) {
+    public void findAll(User owner, ExpectationAndException onResult) {
         db.collection("friendships")
                 .whereEqualTo("userId1", owner.getId())
-//                .orderBy("createdAt")
-//                .limit(limit)
-//                .startAfter((page - 1) * limit)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Friendship> friendships = new ArrayList<>();

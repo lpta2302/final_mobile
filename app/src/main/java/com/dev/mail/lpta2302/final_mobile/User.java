@@ -30,8 +30,8 @@ public class User {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
-    public void getFriendships(int limit, int page, ExpectationAndException onResult) {
-        FriendService.instance.findAll(this, limit, page, onResult);
+    public void getFriendships(ExpectationAndException onResult) {
+        FriendService.instance.findAll(this, onResult);
     }
 
     public void save(ExpectationAndException onResult) {
