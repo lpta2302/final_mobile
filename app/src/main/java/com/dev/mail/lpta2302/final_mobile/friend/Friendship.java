@@ -1,10 +1,10 @@
-package com.dev.mail.lpta2302.final_mobile;
+package com.dev.mail.lpta2302.final_mobile.friend;
 
-import org.jetbrains.annotations.Nullable;
+import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
+import com.dev.mail.lpta2302.final_mobile.user.User;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
