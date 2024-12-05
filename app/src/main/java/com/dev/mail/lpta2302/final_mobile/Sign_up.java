@@ -10,7 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import vn.edu.ueh.thanhdnh.firebase_example.R;
+
 
 public class Sign_up extends AppCompatActivity {
 
