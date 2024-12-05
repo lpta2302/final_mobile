@@ -1,5 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -9,7 +11,6 @@ import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Friendship {
     @Setter
     private String id;
@@ -20,6 +21,13 @@ public class Friendship {
     @Setter
     private LocalDateTime createdAt;
     private FriendStatus status;
+
+    public Friendship(User user1, User user2, LocalDateTime createdAt, FriendStatus status){
+        this.user1 = user1;
+        this.user2 = user2;
+        this.createdAt = createdAt;
+        this.status = status;
+    }
 
     public void sendRequest() {
         this.status = FriendStatus.PENDING;
@@ -38,11 +46,7 @@ public class Friendship {
         this.status = FriendStatus.REMOVED;
     }
 
-    public void save() {
-        ExpectationAndException onResult = (exception, expectation) -> {
-            if (exception != null) throw new RuntimeException(exception);
-        };
-
+    public void save(ExpectationAndException onResult) {
         switch (status) {
             case REMOVED: case DECLINED: FriendService.instance.delete(this, onResult);
             default:

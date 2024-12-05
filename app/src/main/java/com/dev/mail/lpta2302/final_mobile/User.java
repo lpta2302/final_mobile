@@ -34,11 +34,12 @@ public class User {
         FriendService.instance.findAll(this, limit, page, onResult);
     }
 
-    public void save() {
-        ExpectationAndException onResult = (exception, expectation) -> {
-            if (exception != null) throw new RuntimeException(exception);
-        };
+    public void save(ExpectationAndException onResult) {
         if (id == null) UserRepository.instance.create(this, onResult);
         else UserRepository.instance.update(this, onResult);
+    }
+
+    public String toString() {
+        return id + email + firstName + lastName;
     }
 }

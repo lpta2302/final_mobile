@@ -33,6 +33,7 @@ public class UserRepository {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
+                        if (user != null) user.setId(documentSnapshot.getId());
                         onResult.call(null, user);
                     }
                     else {
@@ -51,7 +52,9 @@ public class UserRepository {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                        onResult.call(null, documentSnapshot.toObject(User.class));
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user != null) user.setId(documentSnapshot.getId());
+                        onResult.call(null, user);
                     } else {
                         onResult.call(new Exception("UserNotFound"), null);
                     }
