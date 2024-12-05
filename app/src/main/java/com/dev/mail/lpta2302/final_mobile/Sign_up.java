@@ -12,23 +12,23 @@ import androidx.core.view.WindowInsetsCompat;
 
 import vn.edu.ueh.thanhdnh.firebase_example.R;
 
-public class MainActivity extends AppCompatActivity {
+public class Sign_up extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_up);
 
-        // Nút Login (tạm thời không có xử lý)
-        Button loginButton = findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(v -> {
-            // Xử lý đăng nhập tại đây
+        // Nút Sign Up (tạm thời không có xử lý)
+        Button signUpConfirmButton = findViewById(R.id.signUpConfirmButton);
+        signUpConfirmButton.setOnClickListener(v -> {
+            // Xử lý đăng ký tại đây
         });
 
-        // Nút chuyển đến màn hình Sign Up
-        Button signUpButton = findViewById(R.id.signUpButton);
-        signUpButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Sign_up.class);
+        // Nút quay lại màn hình Login
+        Button loginLinkButton = findViewById(R.id.loginLinkButton);
+        loginLinkButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Sign_up.this, MainActivity.class);
             startActivity(intent);
         });
     }

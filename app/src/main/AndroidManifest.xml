@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Final_mobile"
         tools:targetApi="31">
         <activity
+            android:name="com.dev.mail.lpta2302.final_mobile.Sign_up"
+            android:exported="false" />
+        <activity
+            android:name=".Sign_up"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
