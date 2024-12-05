@@ -30,8 +30,15 @@ public class User {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
-    public void save(ExpectationAndException onResult) {
-        if (id == null) UserRepository.singleton.create(this, onResult);
-        else UserRepository.singleton.update(this, onResult);
+    public void getFriendships(int limit, int page, ExpectationAndException onResult) {
+        FriendService.instance.findAll(this, limit, page, onResult);
+    }
+
+    public void save() {
+        ExpectationAndException onResult = (exception, expectation) -> {
+            if (exception != null) throw new RuntimeException(exception);
+        };
+        if (id == null) UserRepository.instance.create(this, onResult);
+        else UserRepository.instance.update(this, onResult);
     }
 }

@@ -6,9 +6,9 @@ import com.google.firebase.firestore.SetOptions;
 
 public class UserRepository {
     private UserRepository() {}
-    public static UserRepository singleton;
+    public static final UserRepository instance;
     static {
-        singleton = new UserRepository();
+        instance = new UserRepository();
     }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     public void create(User user, ExpectationAndException onResult) {

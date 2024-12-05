@@ -3,9 +3,16 @@ package com.dev.mail.lpta2302.final_mobile;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class AuthenticationService {
-    // Nếu đúng thông tin đăng nhập thì kết quả trả về là một đối tượng User
+    /**
+     * Kiểm tra thông tin đăng nhập.
+     * Nếu đúng thông tin đăng nhập thì kết quả trả về là một đối tượng User.
+     *
+     * @param email Email
+     * @param password Mật khẩu
+     * @param onResult Callback
+     */
     public static void verifyAccount(String email, String password, ExpectationAndException onResult) {
-        UserRepository.singleton.findByEmail(email, (exception, expectation) -> {
+        UserRepository.instance.findByEmail(email, (exception, expectation) -> {
             if (exception == null) {
                 boolean isPasswordValid = BCrypt.checkpw(password, ((User) expectation).getPassword());
                 if (isPasswordValid) onResult.call(null, expectation);
