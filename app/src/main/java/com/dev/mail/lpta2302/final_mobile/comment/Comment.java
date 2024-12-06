@@ -1,6 +1,5 @@
 package com.dev.mail.lpta2302.final_mobile.comment;
 
-
 import com.dev.mail.lpta2302.final_mobile.user.User;
 
 import java.util.Date;

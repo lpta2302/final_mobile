@@ -1,7 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile;
 
 import com.dev.mail.lpta2302.final_mobile.user.User;
-import com.dev.mail.lpta2302.final_mobile.user.UserRepository;
+import com.dev.mail.lpta2302.final_mobile.user.UserService;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,16 +17,16 @@ import java.util.Map;
 
 public class NotificationService {
     private NotificationService() {}
-    public static final NotificationService instance;
-    static {
-        instance = new NotificationService();
-    }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String collectionName = "notifications";
     private final String messageField = "message";
     private final String isReadField = "isRead";
     private final String createdAtField = "createdAt";
     private final String recipientIdField = "recipientId";
+
+    public static NotificationService getInstance() {
+        return new NotificationService();
+    }
 
     private Map<String, Object> toMap(Notification notification) {
         Map<String, Object> notificationMap = new HashMap<>();
@@ -73,7 +73,7 @@ public class NotificationService {
                                 .toLocalDateTime() : null;
                         String recipientId = doc.getString(recipientIdField);
 
-                        UserRepository.instance.findById(recipientId, (exception, expectation) -> {
+                        UserService.getInstance().findById(recipientId, (exception, expectation) -> {
                             if (exception == null) {
                                 User recipient = (User) expectation;
                                 Notification notification = new Notification(message, isRead, createdAt, recipient);
@@ -109,7 +109,7 @@ public class NotificationService {
                                 .toLocalDateTime() : null;
                         String recipientId = documentSnapshot.getString(recipientIdField);
 
-                        UserRepository.instance.findById(recipientId, (exception, expectation) -> {
+                        UserService.getInstance().findById(recipientId, (exception, expectation) -> {
                             if (exception == null) {
                                 User recipient = (User) expectation;
                                 Notification notification = new Notification(id, message, isRead, createdAt, recipient);

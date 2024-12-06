@@ -4,5 +4,14 @@ public enum FriendStatus {
     ACCEPTED,
     DECLINED,
     PENDING,
-    REMOVED
+    REMOVED;
+
+    public static boolean canParseEnum(String value) {
+        try {
+            Enum.valueOf(FriendStatus.class, value);
+            return true;
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return false;
+        }
+    }
 }
