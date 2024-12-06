@@ -2,6 +2,7 @@ package com.dev.mail.lpta2302.final_mobile.post;
 
 import androidx.annotation.NonNull;
 
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +37,7 @@ public class PostService {
         void onSuccess(List<Post> posts);
         void onFailure(Exception e);
     }
-    public void createPost(Post post, CreateCallback callback){
+    public void createPost(Post post, QueryCallback<Post> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
 
