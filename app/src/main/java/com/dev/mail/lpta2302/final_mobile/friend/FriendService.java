@@ -1,5 +1,8 @@
-package com.dev.mail.lpta2302.final_mobile;
+package com.dev.mail.lpta2302.final_mobile.friend;
 
+import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
+import com.dev.mail.lpta2302.final_mobile.user.User;
+import com.dev.mail.lpta2302.final_mobile.user.UserRepository;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

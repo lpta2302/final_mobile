@@ -1,4 +1,8 @@
-package com.dev.mail.lpta2302.final_mobile;
+package com.dev.mail.lpta2302.final_mobile.friend;
+
+import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
+import com.dev.mail.lpta2302.final_mobile.friend.FriendStatus;
+import com.dev.mail.lpta2302.final_mobile.user.User;
 
 import java.time.LocalDateTime;
 
