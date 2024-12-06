@@ -138,4 +138,16 @@ public class NotificationService {
                     onResult.call(e, null);
                 });
     }
+
+    public void delete(Notification notification, ExpectationAndException onResult) {
+        db.collection(collectionName)
+                .document(notification.getId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    onResult.call(null, null);
+                })
+                .addOnFailureListener(e -> {
+                    onResult.call(e, null);
+                });
+    }
 }

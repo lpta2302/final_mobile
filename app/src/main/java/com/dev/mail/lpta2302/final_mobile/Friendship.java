@@ -1,7 +1,5 @@
 package com.dev.mail.lpta2302.final_mobile;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
