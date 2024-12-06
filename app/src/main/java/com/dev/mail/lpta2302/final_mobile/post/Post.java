@@ -20,8 +20,9 @@ public class Post {
     private String imageUrl;
     private String caption;
     private List<String> tags;
+    private String authorId;
     private User author;
-    private List<Comment> comments;
-    private List<User> likes;
+    private List<String> commentIds;
+    private List<String> likes;
     private Date createdAt;
 }
