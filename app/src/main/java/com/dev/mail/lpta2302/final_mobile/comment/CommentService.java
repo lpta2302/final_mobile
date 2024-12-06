@@ -13,6 +13,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,6 +29,7 @@ public class CommentService {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
         comment.setAuthorId(AuthUser.getInstance().getUser().getId());
+        comment.setCreatedAt(new Date());
 
         dbComments.add(comment)
             .addOnSuccessListener(documentReference -> {
@@ -39,7 +41,6 @@ public class CommentService {
             })
             .addOnFailureListener(callback::onFailure);
     }
-
     public void updateComment(Comment updateComment, QueryCallback<Comment> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
@@ -62,9 +63,7 @@ public class CommentService {
                     }
                 });
     }
-
-
-    public void deleteComment(String commentId, QueryCallback<Comment> callback) {
+    public void deleteComment(String commentId, QueryCallback<Boolean> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
 
@@ -72,19 +71,12 @@ public class CommentService {
                 .delete()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        dbComments.get().addOnCompleteListener(fetchTask -> {
-                            if (fetchTask.isSuccessful()) {
-                                List<Comment> comments = fetchTask.getResult().toObjects(Comment.class);
-                                callback.onSuccess(comments.get(0)); // Trả về danh sách các bài viết sau khi xóa
-                            }
-                        });
+                        callback.onSuccess(task.isSuccessful());
                     } else {
                         callback.onFailure(task.getException()); // Trả về null nếu có lỗi
                     }
                 });
     }
-
-
     public void readComments(QueryCallback<List<Comment>> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
@@ -94,7 +86,7 @@ public class CommentService {
                 .addOnCompleteListener((@NonNull Task<QuerySnapshot> task)->{
                             if(task.isSuccessful()){
                                 List<Comment> comments = task.getResult().toObjects( Comment.class);
-                                int totalComment = comments.size();
+                                AtomicInteger totalComment = new AtomicInteger(comments.size());
 
                                 comments.forEach(comment -> {
                                     UserService.getInstance().findById(comment.getAuthorId(),
@@ -104,8 +96,7 @@ public class CommentService {
                                                     if(expectation != null){
                                                         comment.setAuthor((User) expectation);
                                                     }
-                                                    totalComment -= 1;
-                                                    if(totalCo/mment == 0){
+                                                    if(totalComment.decrementAndGet() == 0){
                                                         callback.onSuccess(comments);
                                                     }
                                                 }
