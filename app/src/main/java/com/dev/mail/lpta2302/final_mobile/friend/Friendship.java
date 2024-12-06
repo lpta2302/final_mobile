@@ -1,16 +1,15 @@
-package com.dev.mail.lpta2302.final_mobile.friend;
-
-import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
-import com.dev.mail.lpta2302.final_mobile.user.User;
+package com.dev.mail.lpta2302.final_mobile;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Friendship {
     @Setter
     private String id;
@@ -48,7 +47,9 @@ public class Friendship {
 
     public void save(ExpectationAndException onResult) {
         switch (status) {
-            case REMOVED: case DECLINED: FriendService.instance.delete(this, onResult);
+            case DECLINED: case REMOVED:
+                FriendService.instance.delete(this, onResult);
+
             default:
                 if (id == null) FriendService.instance.create(this, onResult);
                 else FriendService.instance.update(this, onResult);
