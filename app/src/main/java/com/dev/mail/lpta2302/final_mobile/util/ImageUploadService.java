@@ -9,6 +9,7 @@ import com.google.firebase.storage.UploadTask;
 import lombok.Getter;
 
 public class ImageUploadService {
+    private ImageUploadService(){}
     @Getter
     private static final ImageUploadService instance = new ImageUploadService();
 

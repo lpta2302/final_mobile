@@ -18,6 +18,8 @@ public class UserRepository {
                 .addOnSuccessListener(newDocument -> {
                     // Khi tạo mới một document trong collection thì gán id cho đối tượng user và gọi callback với id đó
                     String generatedId = newDocument.getId();
+                    newDocument.update("id", generatedId);
+
                     user.setId(generatedId);
 
                     onResult.call(null, generatedId);
@@ -47,7 +49,7 @@ public class UserRepository {
     }
 
     public void findByEmail(String email, ExpectationAndException onResult) {
-        db.collection("user")
+        db.collection("users")
                 .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {

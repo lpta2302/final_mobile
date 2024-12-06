@@ -2,6 +2,7 @@ package com.dev.mail.lpta2302.final_mobile.post;
 
 import androidx.annotation.NonNull;
 
+import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,7 +16,7 @@ public class PostService {
     private PostService(){}
     @Getter
     private static final PostService instance = new PostService();
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
     public interface ReadCallback {
         void onSuccess(List<Post> posts);
         void onFailure(Exception e);
@@ -39,6 +40,7 @@ public class PostService {
     public void createPost(Post post, CreateCallback callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
+        post.setAuthor(AuthUser.getInstance().getUser());
 
         dbPosts.add(post)
             .addOnSuccessListener(documentReference -> {
