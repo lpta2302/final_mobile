@@ -12,19 +12,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FriendService {
     private FriendService() {}
-    static {
-        instance = new FriendService();
-    }
-    public static final FriendService instance;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String collectionName = "friendships";
     private final String userId1Field = "userId1";
     private final String userId2Field = "userId2";
     private final String createdAtField = "createdAt";
     private final String statusField = "status";
+
+    public static FriendService getInstance() {
+        return new FriendService();
+    }
 
     private Map<String, Object> toMap(Friendship friendship) {
         Map<String, Object> friendshipMap = new HashMap<>();
@@ -36,6 +38,47 @@ public class FriendService {
         friendshipMap.put(statusField, friendship.getStatus().toString());
 
         return friendshipMap;
+    }
+
+    public void toFriendship(DocumentSnapshot documentSnapshot, ExpectationAndException onResult) {
+        String id = documentSnapshot.getId();
+        String userId1 = documentSnapshot.getString(userId1Field);
+        String userId2 = documentSnapshot.getString(userId2Field);
+
+        // Parse status kiểu String của DB sang FriendStatus.
+        String statusString = documentSnapshot.getString(statusField);
+        FriendStatus status;
+        if (FriendStatus.canParseEnum(statusString))
+            status = FriendStatus.valueOf(statusString);
+        else
+            status = FriendStatus.PENDING;
+
+        // Parse createdAt kiểu Timestamp của DB sang LocalDateTime.
+        Timestamp timestamp = documentSnapshot.getTimestamp(createdAtField);
+        LocalDateTime createdAt = timestamp != null
+                ? timestamp.toDate().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime() : null;
+
+        UserService.getInstance().findById(userId1, (exception1, expectation1) -> {
+            if (exception1 == null) {
+                UserService.getInstance().findById(userId2, (exception2, expectation2) -> {
+                    if (exception2 == null) {
+                        User user1 = (User) expectation1;
+                        User user2 = (User) expectation2;
+                        Friendship friendship = new Friendship(id, user1, user2, createdAt, status);
+
+                        onResult.call(null, friendship);
+                    }
+                    else {
+                        onResult.call(exception2, null);
+                    }
+                });
+            }
+            else {
+                onResult.call(exception1, null);
+            }
+        });
     }
 
     public void create(Friendship friendship, ExpectationAndException onResult) {
@@ -59,46 +102,26 @@ public class FriendService {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Friendship> friendships = new ArrayList<>();
+                    // Dùng để đếm số vòng lặp khi nào đủ để trả kết quả.
+                    AtomicInteger processedCount = new AtomicInteger(0);
+                    // Dùng để kiểm tra, ngắt vòng lặp khi có lỗi xảy ra.
+                    AtomicBoolean hasError = new AtomicBoolean(false);
+                    int totalDocuments = queryDocumentSnapshots.size();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                        String id = doc.getId();
-                        String userId1 = doc.getString(userId1Field);
-                        String userId2 = doc.getString(userId2Field);
-                        String statusString = doc.getString(statusField);
-                        Timestamp timestamp = doc.getTimestamp(createdAtField);
+                        toFriendship(doc, (exception, expectation) -> {
+                            if (hasError.get()) return;
 
-                        UserRepository.instance.findById(userId1, (exception1, expectation1) -> {
-                            if (exception1 == null) {
-                                UserRepository.instance.findById(userId2, (exception2, expectation2) -> {
-                                    if (exception2 == null) {
-                                        FriendStatus status;
-                                        try {
-                                            status = FriendStatus.valueOf(statusString);
-                                        } catch (IllegalArgumentException |
-                                                 NullPointerException e) {
-                                            status = null;
-                                        }
+                            if (exception == null) {
+                                Friendship friendship = (Friendship) expectation;
+                                friendships.add(friendship);
 
-                                        LocalDateTime createdAt = timestamp != null
-                                                ? timestamp.toDate().toInstant()
-                                                .atZone(ZoneId.systemDefault())
-                                                .toLocalDateTime() : null;
-
-                                        User user1 = (User) expectation1;
-                                        User user2 = (User) expectation2;
-                                        Friendship friendship = new Friendship(id, user1, user2, createdAt, status);
-                                        friendships.add(friendship);
-
-                                        if (friendships.size() == queryDocumentSnapshots.size())
-                                            onResult.call(null, friendships);
-                                    }
-                                    else {
-                                        onResult.call(exception2, null);
-                                    }
-                                });
+                                if (processedCount.incrementAndGet() == totalDocuments)
+                                    onResult.call(null, friendships);
                             }
                             else {
-                                onResult.call(exception1, null);
+                                hasError.set(true);
+                                onResult.call(exception, null);
                             }
                         });
                     }

@@ -3,11 +3,13 @@ package com.dev.mail.lpta2302.final_mobile;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Friendship {
@@ -28,13 +30,21 @@ public class Friendship {
         this.status = status;
     }
 
-    public void sendRequest() {
+    public void sendRequest(ExpectationAndException onResult) {
         this.status = FriendStatus.PENDING;
+
+        String message = user1.getFirstName() + " gửi cho bạn lời mời kết bạn.";
+        Notification notification = new Notification(message, false, LocalDateTime.now(), user2);
+        NotificationService.getInstance().create(notification, onResult);
     }
 
-    public void acceptRequest() {
+    public void acceptRequest(ExpectationAndException onResult) {
         this.status = FriendStatus.ACCEPTED;
         createdAt = LocalDateTime.now();
+
+        String message = user2.getFirstName() + " chấp nhận lời mời kết bạn.";
+        Notification notification = new Notification(message, false, LocalDateTime.now(), user1);
+        NotificationService.getInstance().create(notification, onResult);
     }
 
     public void declineRequest() {
@@ -43,16 +53,5 @@ public class Friendship {
 
     public void removeFriend() {
         this.status = FriendStatus.REMOVED;
-    }
-
-    public void save(ExpectationAndException onResult) {
-        switch (status) {
-            case DECLINED: case REMOVED:
-                FriendService.instance.delete(this, onResult);
-
-            default:
-                if (id == null) FriendService.instance.create(this, onResult);
-                else FriendService.instance.update(this, onResult);
-        }
     }
 }
