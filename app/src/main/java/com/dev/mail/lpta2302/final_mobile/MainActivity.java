@@ -1,8 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,25 +9,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
-        // Nút Login (tạm thời không có xử lý)
-        Button loginButton = findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(v -> {
-            // Xử lý đăng nhập tại đây
-        });
-
-        // Nút chuyển đến màn hình Sign Up
-        Button signUpButton = findViewById(R.id.signUpButton);
-        signUpButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Sign_up.class);
-            startActivity(intent);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         });
     }
 }

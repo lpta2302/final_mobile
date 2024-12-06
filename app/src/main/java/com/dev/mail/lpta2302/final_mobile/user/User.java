@@ -1,5 +1,8 @@
-package com.dev.mail.lpta2302.final_mobile;
+package com.dev.mail.lpta2302.final_mobile.user;
 
+
+import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
+import com.dev.mail.lpta2302.final_mobile.friend.FriendService;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -30,8 +33,16 @@ public class User {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
+    public void getFriendships(ExpectationAndException onResult) {
+        FriendService.instance.findAll(this, onResult);
+    }
+
     public void save(ExpectationAndException onResult) {
-        if (id == null) UserRepository.singleton.create(this, onResult);
-        else UserRepository.singleton.update(this, onResult);
+        if (id == null) UserRepository.instance.create(this, onResult);
+        else UserRepository.instance.update(this, onResult);
+    }
+
+    public String toString() {
+        return id + email + firstName + lastName;
     }
 }
