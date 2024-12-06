@@ -17,26 +17,6 @@ public class PostService {
     @Getter
     private static final PostService instance = new PostService();
     FirebaseFirestore db;
-    public interface ReadCallback {
-        void onSuccess(List<Post> posts);
-        void onFailure(Exception e);
-    }
-    public interface CreateCallback {
-        void onSuccess(Post post);
-        void onFailure(Exception e);
-    }
-    public interface UpdateCallback {
-        void onSuccess(Post post);
-        void onFailure(Exception e);
-    }
-    public interface DeleteCallback {
-        void onSuccess(Post post);
-        void onFailure(Exception e);
-    }
-    public interface SearchCallback {
-        void onSuccess(List<Post> posts);
-        void onFailure(Exception e);
-    }
     public void createPost(Post post, QueryCallback<Post> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
@@ -52,7 +32,7 @@ public class PostService {
             .addOnFailureListener(callback::onFailure);
     }
 
-    public void updatePost(Post updatePost, UpdateCallback callback) {
+    public void updatePost(Post updatePost, QueryCallback<Post> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
 
@@ -75,7 +55,7 @@ public class PostService {
     }
 
 
-    public void deletePost(String postId, DeleteCallback callback) {
+    public void deletePost(String postId, QueryCallback<Post> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
 
@@ -96,7 +76,7 @@ public class PostService {
     }
 
 
-    public void readPosts(ReadCallback callback){
+    public void readPosts(QueryCallback<List<Post>> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
 
@@ -111,7 +91,7 @@ public class PostService {
             );
     }
 
-    public void searchPostsByCaption(String captionFragment, SearchCallback callback) {
+    public void searchPostsByCaption(String captionFragment, QueryCallback<List<Post>> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
 
@@ -127,7 +107,7 @@ public class PostService {
                     }
                 });
     }
-    public void searchPostsByTags(List<String> tags, SearchCallback callback) {
+    public void searchPostsByTags(List<String> tags, QueryCallback<List<Post>> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
 

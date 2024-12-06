@@ -3,13 +3,18 @@ package com.dev.mail.lpta2302.final_mobile.comment;
 
 import androidx.annotation.NonNull;
 
+import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
 import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.user.User;
+import com.dev.mail.lpta2302.final_mobile.user.UserService;
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
 
@@ -19,30 +24,10 @@ public class CommentService {
     public static final CommentService instance = new CommentService();
 
     FirebaseFirestore db;
-    public interface ReadCallback {
-        void onSuccess(List<Comment> comments);
-        void onFailure(Exception e);
-    }
-    public interface CreateCallback {
-        void onSuccess(Comment comment);
-        void onFailure(Exception e);
-    }
-    public interface UpdateCallback {
-        void onSuccess(Comment comment);
-        void onFailure(Exception e);
-    }
-    public interface DeleteCallback {
-        void onSuccess(Comment comment);
-        void onFailure(Exception e);
-    }
-    public interface SearchCallback {
-        void onSuccess(List<Comment> comments);
-        void onFailure(Exception e);
-    }
-    public void createComment(Comment comment, CreateCallback callback){
+    public void createComment(Comment comment, QueryCallback<Comment> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
-        comment.setAuthor(AuthUser.getInstance().getUser());
+        comment.setAuthorId(AuthUser.getInstance().getUser().getId());
 
         dbComments.add(comment)
             .addOnSuccessListener(documentReference -> {
@@ -55,11 +40,12 @@ public class CommentService {
             .addOnFailureListener(callback::onFailure);
     }
 
-    public void updateComment(Comment updateComment, UpdateCallback callback) {
+    public void updateComment(Comment updateComment, QueryCallback<Comment> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
 
         String commentId = updateComment.getId();
+        updateComment.setAuthor(null);
 
         dbComments.document(commentId)
                 .set(updateComment)
@@ -78,7 +64,7 @@ public class CommentService {
     }
 
 
-    public void deleteComment(String commentId, DeleteCallback callback) {
+    public void deleteComment(String commentId, QueryCallback<Comment> callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
 
@@ -99,7 +85,7 @@ public class CommentService {
     }
 
 
-    public void readComments(ReadCallback callback){
+    public void readComments(QueryCallback<List<Comment>> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbComments = db.collection("comments");
 
@@ -108,7 +94,23 @@ public class CommentService {
                 .addOnCompleteListener((@NonNull Task<QuerySnapshot> task)->{
                             if(task.isSuccessful()){
                                 List<Comment> comments = task.getResult().toObjects( Comment.class);
-                                callback.onSuccess(comments);
+                                int totalComment = comments.size();
+
+                                comments.forEach(comment -> {
+                                    UserService.getInstance().findById(comment.getAuthorId(),
+                                            new ExpectationAndException() {
+                                                @Override
+                                                public void call(Exception exception, Object expectation) {
+                                                    if(expectation != null){
+                                                        comment.setAuthor((User) expectation);
+                                                    }
+                                                    totalComment -= 1;
+                                                    if(totalCo/mment == 0){
+                                                        callback.onSuccess(comments);
+                                                    }
+                                                }
+                                            });
+                                });
                             }else callback.onFailure(task.getException());
                         }
                 );

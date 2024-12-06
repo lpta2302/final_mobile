@@ -18,6 +18,7 @@ import lombok.Setter;
 public class Comment {
     private String id;
     private String content;
+    private String authorId;
     private User author;
     private Date createdAt;
 }
