@@ -1,7 +1,5 @@
 package com.dev.mail.lpta2302.final_mobile;
 
-import android.util.Log;
-
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,24 +20,27 @@ public class FriendService {
     }
     public static final FriendService instance;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final String collectionName = "friendships";
+    private final String userId1Field = "userId1";
+    private final String userId2Field = "userId2";
+    private final String createdAtField = "createdAt";
+    private final String statusField = "status";
 
-    private Map<String, Object> toFriendshipMap(Friendship friendship) {
+    private Map<String, Object> toMap(Friendship friendship) {
         Map<String, Object> friendshipMap = new HashMap<>();
 
-        friendshipMap.put("userId1", friendship.getUser1().getId());
-        friendshipMap.put("userId2", friendship.getUser2().getId());
-        if (friendship.getCreatedAt() != null) {
-            Timestamp time = new Timestamp(Date.from(friendship.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant()));
-            friendshipMap.put("createdAt", time);
-        }
-        friendshipMap.put("status", friendship.getStatus().toString());
+        friendshipMap.put(userId1Field, friendship.getUser1().getId());
+        friendshipMap.put(userId2Field, friendship.getUser2().getId());
+        Timestamp time = new Timestamp(Date.from(friendship.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant()));
+        friendshipMap.put(createdAtField, time);
+        friendshipMap.put(statusField, friendship.getStatus().toString());
 
         return friendshipMap;
     }
 
     public void create(Friendship friendship, ExpectationAndException onResult) {
-        db.collection("friendships")
-                .add(toFriendshipMap(friendship))
+        db.collection(collectionName)
+                .add(toMap(friendship))
                 .addOnSuccessListener(newDocument -> {
                     // Khi tạo mới một document trong collection thì gán id cho đối tượng friendship và gọi callback với id đó
                     String generatedId = newDocument.getId();
@@ -53,56 +54,64 @@ public class FriendService {
     }
 
     public void findAll(User owner, ExpectationAndException onResult) {
-        db.collection("friendships")
-                .whereEqualTo("userId1", owner.getId())
+        db.collection(collectionName)
+                .whereEqualTo(userId1Field, owner.getId())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Friendship> friendships = new ArrayList<>();
 
-                    DocumentSnapshot lastVisibleDocument = queryDocumentSnapshots.getDocuments()
-                            .get(queryDocumentSnapshots.size() - 1);
-
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                         String id = doc.getId();
-                        String userId1 = doc.getString("userId1");
-                        String userId2 = doc.getString("userId2");
-                        String statusString = doc.getString("status");
-                        Timestamp createdAtTimestamp = doc.getTimestamp("createdAt");
+                        String userId1 = doc.getString(userId1Field);
+                        String userId2 = doc.getString(userId2Field);
+                        String statusString = doc.getString(statusField);
+                        Timestamp timestamp = doc.getTimestamp(createdAtField);
 
                         UserRepository.instance.findById(userId1, (exception1, expectation1) -> {
-                            UserRepository.instance.findById(userId2, (exception2, expectation2) -> {
-                                FriendStatus status;
+                            if (exception1 == null) {
+                                UserRepository.instance.findById(userId2, (exception2, expectation2) -> {
+                                    if (exception2 == null) {
+                                        FriendStatus status;
                                         try {
                                             status = FriendStatus.valueOf(statusString);
-                                        } catch (IllegalArgumentException | NullPointerException e) {
+                                        } catch (IllegalArgumentException |
+                                                 NullPointerException e) {
                                             status = null;
                                         }
 
-                                        LocalDateTime createdAt = createdAtTimestamp != null
-                                                ? createdAtTimestamp.toDate().toInstant()
+                                        LocalDateTime createdAt = timestamp != null
+                                                ? timestamp.toDate().toInstant()
                                                 .atZone(ZoneId.systemDefault())
                                                 .toLocalDateTime() : null;
 
-                                        Friendship friendship = new Friendship((User) expectation1, (User) expectation2, createdAt, status);
-                                        friendship.setId(id);
+                                        User user1 = (User) expectation1;
+                                        User user2 = (User) expectation2;
+                                        Friendship friendship = new Friendship(id, user1, user2, createdAt, status);
                                         friendships.add(friendship);
 
                                         if (friendships.size() == queryDocumentSnapshots.size())
                                             onResult.call(null, friendships);
-                            });
+                                    }
+                                    else {
+                                        onResult.call(exception2, null);
+                                    }
+                                });
+                            }
+                            else {
+                                onResult.call(exception1, null);
+                            }
                         });
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FriendService", "" + e);
                     onResult.call(e, null);
                 });
     }
 
     public void update(Friendship friendship, ExpectationAndException onResult) {
-        db.collection("friendships")
+        db.collection(collectionName)
                 .document(friendship.getId())
-                .set(toFriendshipMap(friendship), SetOptions.merge())
+                .set(toMap(friendship), SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     onResult.call(null, null);
                 })
@@ -112,7 +121,7 @@ public class FriendService {
     }
 
     public void delete(Friendship friendship, ExpectationAndException onResult) {
-        db.collection("friendships")
+        db.collection(collectionName)
                 .document(friendship.getId())
                 .delete()
                 .addOnSuccessListener(aVoid -> {

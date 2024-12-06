@@ -11,8 +11,11 @@ public class UserRepository {
         instance = new UserRepository();
     }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final String collectionName = "users";
+    private final String emailField = "email";
+
     public void create(User user, ExpectationAndException onResult) {
-        db.collection("users")
+        db.collection(collectionName)
                 .add(user)
                 .addOnSuccessListener(newDocument -> {
                     // Khi tạo mới một document trong collection thì gán id cho đối tượng user và gọi callback với id đó
@@ -27,7 +30,7 @@ public class UserRepository {
     }
 
     public void findById(String id, ExpectationAndException onResult) {
-        db.collection("users")
+        db.collection(collectionName)
                 .document(id)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -46,8 +49,8 @@ public class UserRepository {
     }
 
     public void findByEmail(String email, ExpectationAndException onResult) {
-        db.collection("user")
-                .whereEqualTo("email", email)
+        db.collection(collectionName)
+                .whereEqualTo(emailField, email)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
@@ -65,7 +68,7 @@ public class UserRepository {
     }
 
     public void update(User user, ExpectationAndException onResult) {
-        db.collection("users")
+        db.collection(collectionName)
                 .document(user.getId())
                 .set(user, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
@@ -77,8 +80,8 @@ public class UserRepository {
     }
 
     public void isEmailExisting(String email, ExpectationAndException onResult) {
-        db.collection("users")
-                .whereEqualTo("email", email)
+        db.collection(collectionName)
+                .whereEqualTo(emailField, email)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     boolean exists = !querySnapshot.isEmpty();
@@ -90,7 +93,7 @@ public class UserRepository {
     }
 
     public void isUserNameExisting(String userName, ExpectationAndException onResult) {
-        db.collection("users")
+        db.collection(collectionName)
                 .whereEqualTo("userName", userName)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {

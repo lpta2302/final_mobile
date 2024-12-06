@@ -1,6 +1,5 @@
 package com.dev.mail.lpta2302.final_mobile;
 
-
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import lombok.Getter;
@@ -34,12 +33,12 @@ public class User {
         FriendService.instance.findAll(this, onResult);
     }
 
+    public void getNotifications(ExpectationAndException onResult) {
+        NotificationService.instance.findAll(this, onResult);
+    }
+
     public void save(ExpectationAndException onResult) {
         if (id == null) UserRepository.instance.create(this, onResult);
         else UserRepository.instance.update(this, onResult);
-    }
-
-    public String toString() {
-        return id + email + firstName + lastName;
     }
 }
