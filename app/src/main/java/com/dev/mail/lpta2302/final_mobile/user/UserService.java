@@ -5,21 +5,52 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-public class UserRepository {
-    private UserRepository() {}
-    public static final UserRepository instance;
-    static {
-        instance = new UserRepository();
-    }
+import java.util.HashMap;
+import java.util.Map;
+
+public class UserService {
+    private UserService() {}
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public void create(User user, ExpectationAndException onResult) {
-        db.collection("users")
-                .add(user)
+    private final String collectionName = "users";
+    private final String emailField = "email";
+    private final String passwordField = "password";
+    private final String firstNameField = "firstName";
+    private final String lastNameField = "lastName";
+
+    public static UserService getInstance() {
+        return new UserService();
+    }
+
+    private Map<String, Object> toMap(User user) {
+        Map<String, Object> userMap = new HashMap<>();
+
+        userMap.put(emailField, user.getEmail());
+        userMap.put(firstNameField, user.getFirstName());
+        userMap.put(lastNameField, user.getLastName());
+
+        return userMap;
+    }
+
+    public User toUser(DocumentSnapshot documentSnapshot) {
+        String id = documentSnapshot.getId();
+        String email = documentSnapshot.getString(emailField);
+        String firstName = documentSnapshot.getString(firstNameField);
+        String lastName = documentSnapshot.getString(lastNameField);
+
+        return new User(id, email, firstName, lastName);
+    }
+
+    public void create(User user, String password, ExpectationAndException onResult) {
+        // Băm mật khẩu trước khi lưu vào DB.
+        Map<String, Object> userMap = toMap(user);
+        String hashedPassword = AuthenticationService.getInstance().hashPassword(password);
+        userMap.put(passwordField, hashedPassword);
+
+        db.collection(collectionName)
+                .add(userMap)
                 .addOnSuccessListener(newDocument -> {
                     // Khi tạo mới một document trong collection thì gán id cho đối tượng user và gọi callback với id đó
                     String generatedId = newDocument.getId();
-                    newDocument.update("id", generatedId);
-
                     user.setId(generatedId);
 
                     onResult.call(null, generatedId);
@@ -30,18 +61,14 @@ public class UserRepository {
     }
 
     public void findById(String id, ExpectationAndException onResult) {
-        db.collection("users")
+        db.collection(collectionName)
                 .document(id)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        User user = documentSnapshot.toObject(User.class);
-                        if (user != null) user.setId(documentSnapshot.getId());
-                        onResult.call(null, user);
-                    }
-                    else {
+                    if (documentSnapshot.exists())
+                        onResult.call(null, toUser(documentSnapshot));
+                    else
                         onResult.call(new Exception("UserNotFound"), null);
-                    }
                 })
                 .addOnFailureListener(e -> {
                     onResult.call(e, null);
@@ -49,15 +76,13 @@ public class UserRepository {
     }
 
     public void findByEmail(String email, ExpectationAndException onResult) {
-        db.collection("users")
-                .whereEqualTo("email", email)
+        db.collection(collectionName)
+                .whereEqualTo(emailField, email)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                        User user = documentSnapshot.toObject(User.class);
-                        if (user != null) user.setId(documentSnapshot.getId());
-                        onResult.call(null, user);
+                        onResult.call(null, toUser(documentSnapshot));
                     } else {
                         onResult.call(new Exception("UserNotFound"), null);
                     }
@@ -68,9 +93,9 @@ public class UserRepository {
     }
 
     public void update(User user, ExpectationAndException onResult) {
-        db.collection("users")
+        db.collection(collectionName)
                 .document(user.getId())
-                .set(user, SetOptions.merge())
+                .set(toMap(user), SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     onResult.call(null, null);
                 })
@@ -80,8 +105,8 @@ public class UserRepository {
     }
 
     public void isEmailExisting(String email, ExpectationAndException onResult) {
-        db.collection("users")
-                .whereEqualTo("email", email)
+        db.collection(collectionName)
+                .whereEqualTo(emailField, email)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     boolean exists = !querySnapshot.isEmpty();
@@ -93,7 +118,7 @@ public class UserRepository {
     }
 
     public void isUserNameExisting(String userName, ExpectationAndException onResult) {
-        db.collection("users")
+        db.collection(collectionName)
                 .whereEqualTo("userName", userName)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {

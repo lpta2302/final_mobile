@@ -2,19 +2,13 @@ package com.dev.mail.lpta2302.final_mobile.post;
 
 import androidx.annotation.NonNull;
 
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.user.User;
-import com.dev.mail.lpta2302.final_mobile.user.UserRepository;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
 
@@ -22,7 +16,7 @@ public class PostService {
     private PostService(){}
     @Getter
     private static final PostService instance = new PostService();
-    private FirebaseFirestore db;
+    FirebaseFirestore db;
     public interface ReadCallback {
         void onSuccess(List<Post> posts);
         void onFailure(Exception e);
@@ -43,10 +37,9 @@ public class PostService {
         void onSuccess(List<Post> posts);
         void onFailure(Exception e);
     }
-    public void createPost(Post post, CreateCallback callback){
+    public void createPost(Post post, QueryCallback<Post> callback){
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
-        post.setAuthorId(AuthUser.getInstance().getUser().getId());
 
         dbPosts.add(post)
             .addOnSuccessListener(documentReference -> {
@@ -64,7 +57,6 @@ public class PostService {
         CollectionReference dbPosts = db.collection("posts");
 
         String postId = updatePost.getId();
-        updatePost.setAuthor(null);
 
         dbPosts.document(postId)
                 .set(updatePost)
@@ -81,38 +73,26 @@ public class PostService {
                     }
                 });
     }
+
+
     public void deletePost(String postId, DeleteCallback callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
-        CollectionReference dbComments = db.collection("comments");
 
-        DocumentReference postRef = db.collection("posts").document(postId);
-        postRef.get().addOnCompleteListener(
-                (@NonNull Task<DocumentSnapshot> task) -> {
-                    if(task.isSuccessful()){
-
-                        Post post = task.getResult().toObject(Post.class);
-                        if(post == null)throw new RuntimeException("Post is null");
-                        List<String> commentIds = post.getCommentIds();
-                        AtomicInteger totalComment = new AtomicInteger(commentIds.size());
-                        commentIds.forEach(id->{
-                            dbComments.document(id)
-                                    .delete()
-                                    .addOnCompleteListener(
-                                            (@NonNull Task<Void> t) -> {
-                                                totalComment.getAndDecrement();
-                                                if(totalComment.get() == 0){
-                                                    db.collection("posts").document(postId);
-                                                }
-                                            }
-
-                                    );
-
+        dbPosts.document(postId)
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        dbPosts.get().addOnCompleteListener(fetchTask -> {
+                            if (fetchTask.isSuccessful()) {
+                                List<Post> posts = fetchTask.getResult().toObjects(Post.class);
+                                callback.onSuccess(posts.get(0)); // Trả về danh sách các bài viết sau khi xóa
+                            }
                         });
+                    } else {
+                        callback.onFailure(task.getException()); // Trả về null nếu có lỗi
                     }
-                }
-        );
-
+                });
     }
 
 
@@ -125,40 +105,12 @@ public class PostService {
             .addOnCompleteListener((@NonNull Task<QuerySnapshot> task)->{
                     if(task.isSuccessful()){
                         List<Post> posts = task.getResult().toObjects( Post.class);
-                        AtomicInteger totalPost = new AtomicInteger(posts.size());
-                        posts.forEach(post->{
-                            UserRepository.instance.findById(post.getAuthorId(),(e,res)->{
-                                if(res != null){
-                                    post.setAuthor((User) res);
-                                    if(totalPost.decrementAndGet() == 0){
-                                        callback.onSuccess(posts);
-                                    }
-                                }
-                            });
-                        });
+                        callback.onSuccess(posts);
                     }else callback.onFailure(task.getException());
                 }
             );
     }
-    public void searchPostByUser(String userId, SearchCallback callback) {
-        db = FirebaseFirestore.getInstance();
-        CollectionReference dbPosts = db.collection("posts");
 
-        dbPosts.whereEqualTo("authorId", userId)
-                .get()
-                .addOnCompleteListener((@NonNull Task<QuerySnapshot> task)->{
-                    if(task.isSuccessful()){
-                        List<Post> posts = task.getResult().toObjects( Post.class);
-
-                        UserRepository.instance.findById(userId, (e,res)->{
-                            posts.forEach(post->{
-                                post.setAuthor((User) res);
-                            });
-                            callback.onSuccess(posts);
-                        });
-                    }else callback.onFailure(task.getException());
-                });
-    }
     public void searchPostsByCaption(String captionFragment, SearchCallback callback) {
         db = FirebaseFirestore.getInstance();
         CollectionReference dbPosts = db.collection("posts");
