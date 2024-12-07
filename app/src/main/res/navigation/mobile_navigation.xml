@@ -23,4 +23,20 @@
         android:label="@string/action_notifications"
         tools:layout="@layout/fragment_notifications" />
 
+    <fragment
+        android:id="@+id/navigation_detail"
+        android:name="com.dev.mail.lpta2302.final_mobile.navigation.detail.DetailFragment"
+        android:label="@string/title_detail"
+        tools:layout="@layout/fragment_detail" />
+
+    <fragment
+        android:id="@+id/navigation_options"
+        android:name="com.dev.mail.lpta2302.final_mobile.navigation.options.OptionsFragment"
+        android:label="@string/title_options"
+        tools:layout="@layout/fragment_options" />
+    <fragment
+        android:id="@+id/navigation_addnews"
+        android:name="com.dev.mail.lpta2302.final_mobile.navigation.addnews.AddnewsFragment"
+        android:label="@string/title_addnews"
+        tools:layout="@layout/fragment_addnews" />
 </navigation>

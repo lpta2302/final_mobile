@@ -7,9 +7,9 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_discover"
-        android:icon="@drawable/ic_global"
-        android:title="@string/title_discover" />
+        android:id="@+id/navigation_detail"
+        android:icon="@drawable/ic_detail"
+        android:title="@string/title_detail" />
 
     <item
         android:id="@+id/navigation_addnews"
@@ -22,7 +22,7 @@
         android:title="@string/title_friends" />
 
     <item
-        android:id="@+id/navigation_detail"
-        android:icon="@drawable/ic_detail"
-        android:title="@string/title_detail" />
+        android:id="@+id/navigation_options"
+        android:icon="@drawable/ic_options"
+        android:title="@string/title_options" />
 </menu>

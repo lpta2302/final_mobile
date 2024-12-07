@@ -1,0 +1,157 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- ScrollView chứa nội dung -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_save_password"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Ảnh đại diện -->
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/ic_launcher_foreground"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle_background" />
+
+            <!-- Label và ô nhập liệu: Tên -->
+            <TextView
+                android:id="@+id/labelName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tên"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/inputName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhập tên của bạn"
+                android:background="@drawable/edittext_background"
+                android:padding="12dp"
+                android:inputType="textPersonName"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Label và ô nhập liệu: Giới tính -->
+            <TextView
+                android:id="@+id/labelGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Giới tính"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/inputGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhập giới tính"
+                android:background="@drawable/edittext_background"
+                android:padding="12dp"
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Label và ô nhập liệu: Tiểu sử -->
+            <TextView
+                android:id="@+id/labelBiography"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tiểu sử"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/inputBiography"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhập tiểu sử"
+                android:background="@drawable/edittext_background"
+                android:padding="12dp"
+                android:inputType="textMultiLine"
+                android:lines="4"
+                android:gravity="top"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Label và ô nhập liệu: Ngày sinh -->
+            <TextView
+                android:id="@+id/labelBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ngày sinh"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/inputBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhập ngày sinh (DD/MM/YYYY)"
+                android:background="@drawable/edittext_background"
+                android:padding="12dp"
+                android:inputType="date"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Label và ô nhập liệu: Email -->
+            <TextView
+                android:id="@+id/labelEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/inputEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhập email"
+                android:background="@drawable/edittext_background"
+                android:padding="12dp"
+                android:inputType="textEmailAddress"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Nút Lưu cố định -->
+    <Button
+        android:id="@+id/btn_save_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#FF6200EE"
+        android:text="Lưu thông tin"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+</RelativeLayout>

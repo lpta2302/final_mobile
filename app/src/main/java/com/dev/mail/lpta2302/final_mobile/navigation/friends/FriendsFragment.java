@@ -32,6 +32,12 @@ public class FriendsFragment extends Fragment {
         friendsList = new ArrayList<>();
         friendsList.add(new Friend("Bạn A", R.drawable.avatar1));
         friendsList.add(new Friend("Bạn B", R.drawable.avatar2));
+        friendsList.add(new Friend("Bạn A", R.drawable.avatar1));
+        friendsList.add(new Friend("Bạn B", R.drawable.avatar2));
+        friendsList.add(new Friend("Bạn A", R.drawable.avatar1));
+        friendsList.add(new Friend("Bạn B", R.drawable.avatar2));
+        friendsList.add(new Friend("Bạn A", R.drawable.avatar1));
+        friendsList.add(new Friend("Bạn B", R.drawable.avatar2));
 
         // Gắn Adapter
         friendsAdapter = new FriendsAdapter(friendsList);

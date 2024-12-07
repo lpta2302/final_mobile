@@ -4,39 +4,40 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeFragment extends Fragment {
 
-    private final MutableLiveData<String> mText = new MutableLiveData<>();
+    private RecyclerView recyclerView;
+    private PostAdapter postAdapter;
+    private List<Post> postList;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate layout trực tiếp
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Thiết lập giá trị ban đầu cho LiveData
-        mText.setValue("This is home fragment");
+        // Khởi tạo RecyclerView và danh sách bài viết
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Ánh xạ View thủ công
-        TextView textView = root.findViewById(R.id.text_home);
+        // Tạo danh sách các bài viết giả
+        postList = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            postList.add(new Post(i + " likes"));  // Hình ảnh avatar1 đã được set cố định trong Adapter
+        }
 
-        // Quan sát LiveData để cập nhật UI
-        mText.observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                textView.setText(s);
-            }
-        });
+        // Gán adapter vào RecyclerView
+        postAdapter = new PostAdapter(postList);
+        recyclerView.setAdapter(postAdapter);
 
-        return root;
+        return rootView;
     }
 }
