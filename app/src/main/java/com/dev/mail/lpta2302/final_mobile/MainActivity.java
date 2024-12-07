@@ -1,5 +1,6 @@
 package com.dev.mail.lpta2302.final_mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.dev.mail.lpta2302.final_mobile.activities.LoginActivity;
 import com.dev.mail.lpta2302.final_mobile.databinding.ActivityMainBinding;
 import com.dev.mail.lpta2302.final_mobile.fragments.CreateFragment;
 import com.dev.mail.lpta2302.final_mobile.fragments.FriendsFragment;
@@ -77,9 +79,8 @@ public class MainActivity extends AppCompatActivity {
             binding.bottomNavigationView.setBackground(null);
             binding.bottomNavigationView.setOnItemSelectedListener(selectListener);
         } else{
-//            Intent intent = new Intent(this, LoginActivity.class); //add login acctivity to change
-//            startActivity(intent);
-            finish();
+            Intent intent = new Intent(this, LoginActivity.class); //add login acctivity to change
+            startActivity(intent);
         }
     }
 
