@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Final_mobile" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+        <!-- <ite
 
-    <style name="Theme.Final_mobile" parent="Base.Theme.Final_mobile" />
+    <style name="Theme.Final_mobile" parent="Base.Theme.Final_mobile" />m name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
 </resources>

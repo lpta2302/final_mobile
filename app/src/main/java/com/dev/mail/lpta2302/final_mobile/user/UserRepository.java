@@ -20,7 +20,7 @@ public class UserRepository {
                 .add(user)
                 .addOnSuccessListener(newDocument -> {
                     // Khi tạo mới một document trong collection thì gán id cho đối tượng user và gọi callback với id đó
-                    String generatedId = newDocument.getId();
+                    String generatedId = newDocument.getId();git
                     user.setId(generatedId);
 
                     onResult.call(null, generatedId);
