@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Permissions for internet -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -18,25 +16,16 @@
         android:theme="@style/Theme.Final_mobile"
         tools:targetApi="31">
         <activity
-            android:name=".HomeApp"
+            android:name=".activities.auth.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".Detail"
+            android:name=".activities.auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".Post"
+            android:name=".ChangePassword"
             android:exported="false" />
         <activity
-            android:name=".ForgotPassword"
-            android:exported="false" />
-        <activity
-            android:name=".ManageYourProfile"
-            android:exported="false" />
-        <activity
-            android:name=".Setting"
-            android:exported="false" />
-        <activity
-            android:name=".Sign_up"
+            android:name=".ManageProfile"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
