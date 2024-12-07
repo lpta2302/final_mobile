@@ -31,6 +31,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    packaging {
+        // Exclude the conflicting files
+        resources.excludes.add("META-INF/NOTICE.md")
+        resources.excludes.add( "META-INF/NOTICE")
+        resources.excludes.add("META-INF/LICENSE.md")
+        resources.excludes.add("META-INF/LICENSE")
+    }
 }
 
 dependencies {
@@ -49,4 +56,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.36")  // Thêm Lombok vào đây
     annotationProcessor("org.projectlombok:lombok:1.18.36")
     implementation("org.springframework.security:spring-security-crypto:5.7.3")
+
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 }
