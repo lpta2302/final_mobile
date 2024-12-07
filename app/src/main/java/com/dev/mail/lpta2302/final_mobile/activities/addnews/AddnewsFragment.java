@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.addnews;
+package com.dev.mail.lpta2302.final_mobile.activities.addnews;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

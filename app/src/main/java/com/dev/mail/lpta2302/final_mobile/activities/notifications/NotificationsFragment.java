@@ -1,20 +1,16 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.notifications;
+package com.dev.mail.lpta2302.final_mobile.activities.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
-import com.dev.mail.lpta2302.final_mobile.navigation.friends.Friend;
-import com.dev.mail.lpta2302.final_mobile.navigation.friends.FriendsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

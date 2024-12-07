@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.notifications;
+package com.dev.mail.lpta2302.final_mobile.activities.notifications;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
-import com.dev.mail.lpta2302.final_mobile.navigation.friends.Friend;
-import com.dev.mail.lpta2302.final_mobile.navigation.friends.FriendsAdapter;
 
 import java.util.List;
 

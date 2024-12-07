@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.home;
+package com.dev.mail.lpta2302.final_mobile.activities.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,7 +31,7 @@ public class HomeFragment extends Fragment {
         // Tạo danh sách các bài viết giả
         postList = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
-            postList.add(new Post(i + " likes"));  // Hình ảnh avatar1 đã được set cố định trong Adapter
+            postList.add(new Post(String.valueOf(i)));  // Hình ảnh avatar1 đã được set cố định trong Adapter
         }
 
         // Gán adapter vào RecyclerView

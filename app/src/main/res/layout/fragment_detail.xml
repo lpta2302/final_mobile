@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".navigation.detail.DetailFragment">
+    tools:context=".activities.detail.DetailFragment">
 
     <!-- Thêm ScrollView để cho phép cuộn -->
     <ScrollView

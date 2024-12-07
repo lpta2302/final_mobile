@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.home;
+package com.dev.mail.lpta2302.final_mobile.activities.home;
 
 public class Post {
     private String likeCount;

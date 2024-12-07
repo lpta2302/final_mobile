@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.activities;
+package com.dev.mail.lpta2302.final_mobile.activities.auth;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.friends;
+package com.dev.mail.lpta2302.final_mobile.activities.friends;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

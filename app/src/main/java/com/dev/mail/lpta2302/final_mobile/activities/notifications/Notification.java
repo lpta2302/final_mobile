@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.notifications;
+package com.dev.mail.lpta2302.final_mobile.activities.notifications;
 
 public class Notification {
     private String name;

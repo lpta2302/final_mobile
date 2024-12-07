@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.detail;
+package com.dev.mail.lpta2302.final_mobile.activities.detail;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

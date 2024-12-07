@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".navigation.options.OptionsFragment">
+    tools:context=".activities.options.OptionsFragment">
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup1"

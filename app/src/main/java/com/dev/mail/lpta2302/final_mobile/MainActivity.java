@@ -12,15 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.dev.mail.lpta2302.final_mobile.activities.LoginActivity;
+import com.dev.mail.lpta2302.final_mobile.activities.addnews.AddnewsFragment;
+import com.dev.mail.lpta2302.final_mobile.activities.auth.LoginActivity;
+import com.dev.mail.lpta2302.final_mobile.activities.friends.FriendsFragment;
+import com.dev.mail.lpta2302.final_mobile.activities.home.HomeFragment;
+import com.dev.mail.lpta2302.final_mobile.activities.notifications.NotificationsFragment;
+import com.dev.mail.lpta2302.final_mobile.activities.options.OptionsFragment;
+import com.dev.mail.lpta2302.final_mobile.activities.search.SearchFragment;
 import com.dev.mail.lpta2302.final_mobile.databinding.ActivityMainBinding;
-import com.dev.mail.lpta2302.final_mobile.fragments.CreateFragment;
-import com.dev.mail.lpta2302.final_mobile.fragments.FriendsFragment;
-import com.dev.mail.lpta2302.final_mobile.fragments.HomeFragment;
-import com.dev.mail.lpta2302.final_mobile.fragments.LikedFragment;
-import com.dev.mail.lpta2302.final_mobile.fragments.MenuFragment;
-import com.dev.mail.lpta2302.final_mobile.fragments.NotificationFragment;
-import com.dev.mail.lpta2302.final_mobile.fragments.SearchFragment;
 import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -38,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
             if(id == R.id.home)
                 replaceFragment(new HomeFragment());
             if(id == R.id.liked)
-                replaceFragment(new LikedFragment());
+                replaceFragment(new HomeFragment());
             if(id == R.id.friends)
                 replaceFragment(new FriendsFragment());
             if(id == R.id.create)
-                replaceFragment(new CreateFragment());
+                replaceFragment(new AddnewsFragment());
             if(id == R.id.menu)
-                replaceFragment(new MenuFragment());
+                replaceFragment(new OptionsFragment());
             return true;
         }
     };
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         int id = item.getItemId();
         if(id == R.id.notification){
-            replaceFragment(new NotificationFragment());
+            replaceFragment(new NotificationsFragment());
         } else if (id == R.id.search){
             replaceFragment(new SearchFragment());
         }
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (AuthUser.getInstance().isAuthenticated()){
+        if (!AuthUser.getInstance().isAuthenticated()){
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
             toolbar = findViewById(R.id.toolbar);

@@ -1,4 +1,4 @@
-package com.dev.mail.lpta2302.final_mobile.navigation.options;
+package com.dev.mail.lpta2302.final_mobile.activities.options;
 
 import android.content.Intent;
 import android.os.Bundle;
