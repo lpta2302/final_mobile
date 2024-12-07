@@ -48,5 +48,8 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok:1.18.36")  // Thêm Lombok vào đây
     annotationProcessor("org.projectlombok:lombok:1.18.36")
+    implementation("androidx.room:room-runtime:2.5.2")
+    implementation("com.google.code.gson:gson:2.11.0")
+    annotationProcessor("androidx.room:room-compiler:2.5.2")
     implementation("org.springframework.security:spring-security-crypto:5.7.3")
 }

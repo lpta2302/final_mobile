@@ -1,6 +1,12 @@
 package com.dev.mail.lpta2302.final_mobile.user;
 
-import java.time.LocalDate;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import java.util.Date;
+
+import com.dev.mail.lpta2302.final_mobile.util.Converter.DateConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,15 +17,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class User {
+    @PrimaryKey
     private String id;
     private String email;
     private String firstName;
     private String lastName;
     private Gender gender;
-    private LocalDate dateOfBirth;
+    @TypeConverters(DateConverter.class)
+    private Date dateOfBirth;
 
-    public User(String email, String firstName, String lastName, Gender gender, LocalDate dateOfBirth) {
+    public User(String email, String firstName, String lastName, Gender gender, Date dateOfBirth) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
