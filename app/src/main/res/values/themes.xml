@@ -1,9 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Final_mobile" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Final_mobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/brand</item>
+         <item name="colorPrimaryVariant">@color/brand</item>
     </style>
 
     <style name="Theme.Final_mobile" parent="Base.Theme.Final_mobile" />
+    <style name="CustomToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@color/brand</item>
+        <item name="navigationIconTint">@color/text</item>
+    </style>
 </resources>
