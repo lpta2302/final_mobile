@@ -41,9 +41,11 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation(libs.play.services.tasks)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
     compileOnly("org.projectlombok:lombok:1.18.36")  // Thêm Lombok vào đây
     annotationProcessor("org.projectlombok:lombok:1.18.36")
     implementation("org.springframework.security:spring-security-crypto:5.7.3")

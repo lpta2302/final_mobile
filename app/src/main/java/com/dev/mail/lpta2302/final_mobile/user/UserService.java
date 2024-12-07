@@ -1,11 +1,18 @@
 package com.dev.mail.lpta2302.final_mobile.user;
 
-import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.util.RemoveVietnameseDiacritics;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserService {
@@ -16,6 +23,9 @@ public class UserService {
     private final String passwordField = "password";
     private final String firstNameField = "firstName";
     private final String lastNameField = "lastName";
+    private final String fullNameField = "fullName";
+    private final String genderField = "gender";
+    private final String dateOfBirthField = "dateOfBirth";
 
     public static UserService getInstance() {
         return new UserService();
@@ -27,6 +37,12 @@ public class UserService {
         userMap.put(emailField, user.getEmail());
         userMap.put(firstNameField, user.getFirstName());
         userMap.put(lastNameField, user.getLastName());
+        userMap.put(fullNameField, user.getFullName());
+        userMap.put(genderField, user.getGender() == Gender.MALE);
+
+        Date date = Date.from(user.getDateOfBirth().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Timestamp timestamp = new Timestamp(date);
+        userMap.put(dateOfBirthField, timestamp);
 
         return userMap;
     }
@@ -36,11 +52,23 @@ public class UserService {
         String email = documentSnapshot.getString(emailField);
         String firstName = documentSnapshot.getString(firstNameField);
         String lastName = documentSnapshot.getString(lastNameField);
+        Boolean genderBoolean = documentSnapshot.getBoolean(genderField);
 
-        return new User(id, email, firstName, lastName);
+        Gender gender;
+        if (genderBoolean != null && genderBoolean) gender = Gender.MALE;
+        else gender = Gender.FEMALE;
+
+        Timestamp timestamp = documentSnapshot.getTimestamp(dateOfBirthField);
+        LocalDate dateOfBirth;
+        if (timestamp != null)
+            dateOfBirth = timestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        else
+            dateOfBirth = null;
+
+        return new User(id, email, firstName, lastName, gender, dateOfBirth);
     }
 
-    public void create(User user, String password, ExpectationAndException onResult) {
+    public void create(User user, String password, QueryCallback<String> callback) {
         // Băm mật khẩu trước khi lưu vào DB.
         Map<String, Object> userMap = toMap(user);
         String hashedPassword = AuthenticationService.getInstance().hashPassword(password);
@@ -49,84 +77,68 @@ public class UserService {
         db.collection(collectionName)
                 .add(userMap)
                 .addOnSuccessListener(newDocument -> {
-                    // Khi tạo mới một document trong collection thì gán id cho đối tượng user và gọi callback với id đó
+
                     String generatedId = newDocument.getId();
                     user.setId(generatedId);
 
-                    onResult.call(null, generatedId);
+                    callback.onSuccess(generatedId);
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 
-    public void findById(String id, ExpectationAndException onResult) {
+    public void findById(String id, QueryCallback<User> callback) {
         db.collection(collectionName)
                 .document(id)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists())
-                        onResult.call(null, toUser(documentSnapshot));
+                        callback.onSuccess(toUser(documentSnapshot));
                     else
-                        onResult.call(new Exception("UserNotFound"), null);
+                        callback.onFailure(new Exception("UserNotFound"));
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 
-    public void findByEmail(String email, ExpectationAndException onResult) {
+    public void findByEmail(String email, QueryCallback<User> callback) {
         db.collection(collectionName)
                 .whereEqualTo(emailField, email)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                        onResult.call(null, toUser(documentSnapshot));
+                        callback.onSuccess(toUser(documentSnapshot));
                     } else {
-                        onResult.call(new Exception("UserNotFound"), null);
+                        callback.onFailure(new Exception("UserNotFound"));
                     }
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 
-    public void update(User user, ExpectationAndException onResult) {
+    public void searchByFullName(String keyword, QueryCallback<List<User>> callback) {
+        db.collection(collectionName)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> users = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        String fullName = doc.getString(fullNameField);
+                        if (fullName != null
+                                && RemoveVietnameseDiacritics.removeDiacritics(fullName).trim()
+                                .contains(RemoveVietnameseDiacritics.removeDiacritics(keyword).trim()))
+                            users.add(toUser(doc));
+                    }
+                    callback.onSuccess(users);
+                })
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    public void update(User user, QueryCallback<Void> callback) {
         db.collection(collectionName)
                 .document(user.getId())
                 .set(toMap(user), SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
-                    onResult.call(null, null);
+                    callback.onSuccess(null);
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
-    }
-
-    public void isEmailExisting(String email, ExpectationAndException onResult) {
-        db.collection(collectionName)
-                .whereEqualTo(emailField, email)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    boolean exists = !querySnapshot.isEmpty();
-                    onResult.call(null, exists);
-                })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
-    }
-
-    public void isUserNameExisting(String userName, ExpectationAndException onResult) {
-        db.collection(collectionName)
-                .whereEqualTo("userName", userName)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    boolean exists = !querySnapshot.isEmpty();
-                    onResult.call(null, exists);
-                })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 }

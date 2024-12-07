@@ -1,8 +1,8 @@
 package com.dev.mail.lpta2302.final_mobile.friend;
 
-import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
 import com.dev.mail.lpta2302.final_mobile.user.User;
 import com.dev.mail.lpta2302.final_mobile.user.UserService;
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,12 +43,12 @@ public class FriendService {
         return friendshipMap;
     }
 
-    public void toFriendship(DocumentSnapshot documentSnapshot, ExpectationAndException onResult) {
+    private void toFriendship(DocumentSnapshot documentSnapshot, QueryCallback<Friendship> callback) {
         String id = documentSnapshot.getId();
         String userId1 = documentSnapshot.getString(userId1Field);
         String userId2 = documentSnapshot.getString(userId2Field);
 
-        // Parse status kiểu String của DB sang FriendStatus.
+        // Parse status kiểu String từ DB sang FriendStatus.
         String statusString = documentSnapshot.getString(statusField);
         FriendStatus status;
         if (FriendStatus.canParseEnum(statusString))
@@ -56,105 +56,107 @@ public class FriendService {
         else
             status = FriendStatus.PENDING;
 
-        // Parse createdAt kiểu Timestamp của DB sang LocalDateTime.
+        // Parse createdAt kiểu Timestamp từ DB sang LocalDateTime.
         Timestamp timestamp = documentSnapshot.getTimestamp(createdAtField);
         LocalDateTime createdAt = timestamp != null
                 ? timestamp.toDate().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime() : null;
 
-        UserService.getInstance().findById(userId1, (exception1, expectation1) -> {
-            if (exception1 == null) {
-                UserService.getInstance().findById(userId2, (exception2, expectation2) -> {
-                    if (exception2 == null) {
-                        User user1 = (User) expectation1;
-                        User user2 = (User) expectation2;
-                        Friendship friendship = new Friendship(id, user1, user2, createdAt, status);
-
-                        onResult.call(null, friendship);
+        UserService.getInstance().findById(userId1, new QueryCallback<>() {
+            @Override
+            public void onSuccess(User expectation) {
+                User user1 = expectation;
+                UserService.getInstance().findById(userId2, new QueryCallback<>() {
+                    @Override
+                    public void onSuccess(User expectation) {
+                        Friendship friendship = new Friendship(id, user1, expectation, createdAt, status);
+                        callback.onSuccess(friendship);
                     }
-                    else {
-                        onResult.call(exception2, null);
+
+                    @Override
+                    public void onFailure(Exception exception) {
+                        callback.onFailure(exception);
                     }
                 });
             }
-            else {
-                onResult.call(exception1, null);
+
+            @Override
+            public void onFailure(Exception exception) {
+                callback.onFailure(exception);
             }
         });
     }
 
-    public void create(Friendship friendship, ExpectationAndException onResult) {
+    public void create(Friendship friendship, QueryCallback<String> callback) {
         db.collection(collectionName)
                 .add(toMap(friendship))
                 .addOnSuccessListener(newDocument -> {
-                    // Khi tạo mới một document trong collection thì gán id cho đối tượng friendship và gọi callback với id đó
+
                     String generatedId = newDocument.getId();
                     friendship.setId(generatedId);
 
-                    onResult.call(null, generatedId);
+                    callback.onSuccess(generatedId);
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 
-    public void findAll(User owner, ExpectationAndException onResult) {
+    public void findAll(User owner, QueryCallback<List<Friendship>> callback) {
         db.collection(collectionName)
                 .whereEqualTo(userId1Field, owner.getId())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Friendship> friendships = new ArrayList<>();
+
                     // Dùng để đếm số vòng lặp khi nào đủ để trả kết quả.
                     AtomicInteger processedCount = new AtomicInteger(0);
+
                     // Dùng để kiểm tra, ngắt vòng lặp khi có lỗi xảy ra.
                     AtomicBoolean hasError = new AtomicBoolean(false);
+
+                    // Tổng số lượng document cần xử lý.
                     int totalDocuments = queryDocumentSnapshots.size();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                        toFriendship(doc, (exception, expectation) -> {
-                            if (hasError.get()) return;
+                        if (hasError.get()) return;
 
-                            if (exception == null) {
-                                Friendship friendship = (Friendship) expectation;
-                                friendships.add(friendship);
+                        toFriendship(doc, new QueryCallback<>() {
+                            @Override
+                            public void onSuccess(Friendship expectation) {
+                                friendships.add(expectation);
 
                                 if (processedCount.incrementAndGet() == totalDocuments)
-                                    onResult.call(null, friendships);
+                                    callback.onSuccess(friendships);
                             }
-                            else {
+
+                            @Override
+                            public void onFailure(Exception exception) {
                                 hasError.set(true);
-                                onResult.call(exception, null);
+                                callback.onFailure(exception);
                             }
                         });
                     }
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 
-    public void update(Friendship friendship, ExpectationAndException onResult) {
+    public void update(Friendship friendship, QueryCallback<Void> callback) {
         db.collection(collectionName)
                 .document(friendship.getId())
                 .set(toMap(friendship), SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
-                    onResult.call(null, null);
+                    callback.onSuccess(null);
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 
-    public void delete(Friendship friendship, ExpectationAndException onResult) {
+    public void delete(Friendship friendship, QueryCallback<Void> callback) {
         db.collection(collectionName)
                 .document(friendship.getId())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
-                    onResult.call(null, null);
+                    callback.onSuccess(null);
                 })
-                .addOnFailureListener(e -> {
-                    onResult.call(e, null);
-                });
+                .addOnFailureListener(callback::onFailure);
     }
 }

@@ -1,9 +1,12 @@
 package com.dev.mail.lpta2302.final_mobile.friend;
 
-import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
+import androidx.annotation.Nullable;
+
 import com.dev.mail.lpta2302.final_mobile.Notification;
 import com.dev.mail.lpta2302.final_mobile.NotificationService;
 import com.dev.mail.lpta2302.final_mobile.user.User;
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -34,28 +37,29 @@ public class Friendship {
         this.status = status;
     }
 
-    public void sendRequest(ExpectationAndException onResult) {
+    public void sendRequest(@Nullable Notification notification, QueryCallback<String> callback) {
         this.status = FriendStatus.PENDING;
-
-        String message = user1.getFirstName() + " gửi cho bạn lời mời kết bạn.";
-        Notification notification = new Notification(message, false, LocalDateTime.now(), user2);
-        NotificationService.getInstance().create(notification, onResult);
+        if (notification != null) NotificationService.getInstance().create(notification, callback);
     }
 
-    public void acceptRequest(ExpectationAndException onResult) {
+    public void acceptRequest(@Nullable Notification notification, QueryCallback<String> callback) {
         this.status = FriendStatus.ACCEPTED;
         createdAt = LocalDateTime.now();
 
-        String message = user2.getFirstName() + " chấp nhận lời mời kết bạn.";
-        Notification notification = new Notification(message, false, LocalDateTime.now(), user1);
-        NotificationService.getInstance().create(notification, onResult);
+        if (notification != null) NotificationService.getInstance().create(notification, callback);
     }
 
-    public void declineRequest() {
+    public void declineRequest(@Nullable Notification notification, QueryCallback<Void> callback) {
         this.status = FriendStatus.DECLINED;
+
+        if (notification != null && notification.getId() != null)
+            NotificationService.getInstance().delete(notification, callback);
     }
 
-    public void removeFriend() {
+    public void removeFriend(@Nullable Notification notification, QueryCallback<Void> callback) {
         this.status = FriendStatus.REMOVED;
+
+        if (notification != null && notification.getId() != null)
+            NotificationService.getInstance().delete(notification, callback);
     }
 }
