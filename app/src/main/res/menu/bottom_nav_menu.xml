@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_discover"
+        android:icon="@drawable/ic_global"
+        android:title="@string/title_discover" />
+
+    <item
+        android:id="@+id/navigation_addnews"
+        android:icon="@drawable/ic_addnews"
+        android:title="@string/title_addnews" />
+
+    <item
+        android:id="@+id/navigation_friends"
+        android:icon="@drawable/ic_addfriend"
+        android:title="@string/title_friends" />
+
+    <item
+        android:id="@+id/navigation_detail"
+        android:icon="@drawable/ic_detail"
+        android:title="@string/title_detail" />
+</menu>
