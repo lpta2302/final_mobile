@@ -1,6 +1,5 @@
 package com.dev.mail.lpta2302.final_mobile.comment;
 
-
 import com.dev.mail.lpta2302.final_mobile.user.User;
 
 import java.util.Date;
@@ -19,6 +18,7 @@ import lombok.Setter;
 public class Comment {
     private String id;
     private String content;
+    private String authorId;
     private User author;
     private Date createdAt;
 }

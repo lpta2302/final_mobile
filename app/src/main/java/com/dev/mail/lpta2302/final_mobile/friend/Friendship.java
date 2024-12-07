@@ -1,13 +1,22 @@
-package com.dev.mail.lpta2302.final_mobile;
+package com.dev.mail.lpta2302.final_mobile.friend;
+
+import androidx.annotation.Nullable;
+
+import com.dev.mail.lpta2302.final_mobile.Notification;
+import com.dev.mail.lpta2302.final_mobile.NotificationService;
+import com.dev.mail.lpta2302.final_mobile.user.User;
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Friendship {
@@ -28,31 +37,29 @@ public class Friendship {
         this.status = status;
     }
 
-    public void sendRequest() {
+    public void sendRequest(@Nullable Notification notification, QueryCallback<String> callback) {
         this.status = FriendStatus.PENDING;
+        if (notification != null) NotificationService.getInstance().create(notification, callback);
     }
 
-    public void acceptRequest() {
+    public void acceptRequest(@Nullable Notification notification, QueryCallback<String> callback) {
         this.status = FriendStatus.ACCEPTED;
         createdAt = LocalDateTime.now();
+
+        if (notification != null) NotificationService.getInstance().create(notification, callback);
     }
 
-    public void declineRequest() {
+    public void declineRequest(@Nullable Notification notification, QueryCallback<Void> callback) {
         this.status = FriendStatus.DECLINED;
+
+        if (notification != null && notification.getId() != null)
+            NotificationService.getInstance().delete(notification, callback);
     }
 
-    public void removeFriend() {
+    public void removeFriend(@Nullable Notification notification, QueryCallback<Void> callback) {
         this.status = FriendStatus.REMOVED;
-    }
 
-    public void save(ExpectationAndException onResult) {
-        switch (status) {
-            case DECLINED: case REMOVED:
-                FriendService.instance.delete(this, onResult);
-
-            default:
-                if (id == null) FriendService.instance.create(this, onResult);
-                else FriendService.instance.update(this, onResult);
-        }
+        if (notification != null && notification.getId() != null)
+            NotificationService.getInstance().delete(notification, callback);
     }
 }
