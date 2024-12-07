@@ -116,11 +116,19 @@ public class PostService {
                     if(task.isSuccessful()){
                         List<Post> posts = task.getResult().toObjects( Post.class);
 
-                        UserService.getInstance().findById(userId, (e,res)->{
-                            posts.forEach(post->{
-                                post.setAuthor((User) res);
-                            });
-                            callback.onSuccess(posts);
+                        UserService.getInstance().findById(userId, new QueryCallback<User>() {
+                            @Override
+                            public void onSuccess(User expectation) {
+                                posts.forEach(post->{
+                                    post.setAuthor( expectation);
+                                });
+                                callback.onSuccess(posts);
+                            }
+
+                            @Override
+                            public void onFailure(Exception exception) {
+
+                            }
                         });
                     }else callback.onFailure(task.getException());
                 });
@@ -159,12 +167,20 @@ public class PostService {
             List<Post> posts = task.getResult().toObjects( Post.class);
             AtomicInteger totalPost = new AtomicInteger(posts.size());
             posts.forEach(post->{
-                UserService.getInstance().findById(post.getAuthorId(),(e,res)->{
-                    if(res != null){
-                        post.setAuthor((User) res);
-                        if(totalPost.decrementAndGet() == 0){
-                            callback.onSuccess(posts);
+                UserService.getInstance().findById(post.getAuthorId(), new QueryCallback<User>() {
+                    @Override
+                    public void onSuccess(User expectation) {
+                        if(expectation != null){
+                            post.setAuthor(expectation);
+                            if(totalPost.decrementAndGet() == 0){
+                                callback.onSuccess(posts);
+                            }
                         }
+                    }
+
+                    @Override
+                    public void onFailure(Exception exception) {
+
                     }
                 });
             });

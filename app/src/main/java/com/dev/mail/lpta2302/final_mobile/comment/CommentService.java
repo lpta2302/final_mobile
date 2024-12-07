@@ -3,7 +3,6 @@ package com.dev.mail.lpta2302.final_mobile.comment;
 
 import androidx.annotation.NonNull;
 
-import com.dev.mail.lpta2302.final_mobile.ExpectationAndException;
 import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
 import com.dev.mail.lpta2302.final_mobile.user.User;
 import com.dev.mail.lpta2302.final_mobile.user.UserService;
@@ -90,9 +89,9 @@ public class CommentService {
 
                                 comments.forEach(comment -> {
                                     UserService.getInstance().findById(comment.getAuthorId(),
-                                            new ExpectationAndException() {
+                                            new QueryCallback<User>() {
                                                 @Override
-                                                public void call(Exception exception, Object expectation) {
+                                                public void onSuccess(User expectation) {
                                                     if(expectation != null){
                                                         comment.setAuthor((User) expectation);
                                                     }
@@ -100,9 +99,16 @@ public class CommentService {
                                                         callback.onSuccess(comments);
                                                     }
                                                 }
-                                            });
+
+                                                @Override
+                                                public void onFailure(Exception exception) {
+
+                                                }
+                                            }
+                                    );
                                 });
-                            }else callback.onFailure(task.getException());
+                            }
+                            else callback.onFailure(task.getException());
                         }
                 );
     }
