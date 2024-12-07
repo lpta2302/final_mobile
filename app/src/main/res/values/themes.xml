@@ -7,8 +7,4 @@
     </style>
 
     <style name="Theme.Final_mobile" parent="Base.Theme.Final_mobile" />
-    <style name="CustomToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColor">@color/brand</item>
-        <item name="navigationIconTint">@color/text</item>
-    </style>
 </resources>
