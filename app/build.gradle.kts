@@ -56,4 +56,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     annotationProcessor("androidx.room:room-compiler:2.5.2")
     implementation("org.springframework.security:spring-security-crypto:5.7.3")
+    implementation("com.squareup.picasso:picasso:2.8")
 }

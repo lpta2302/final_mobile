@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,8 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <!-- Logo -->
@@ -38,63 +39,99 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/firstNameEt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/text"
                 android:hint="First Name"
-                android:backgroundTint="@color/text"
                 android:textColor="@color/text"
-                android:textColorHint="@color/sub2"
-                android:layout_marginEnd="8dp" />
+                android:textColorHint="@color/sub2" />
 
             <EditText
+                android:id="@+id/lastNameEt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Last Name"
                 android:backgroundTint="@color/text"
+                android:hint="Last Name"
                 android:textColor="@color/text"
-                android:textColorHint="@color/sub2"/>
+                android:textColorHint="@color/sub2" />
         </LinearLayout>
 
         <!-- Email -->
         <EditText
+            android:id="@+id/emailEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:layout_marginBottom="16dp"
             android:backgroundTint="@color/text"
-            android:textColor="@color/text"
-            android:textColorHint="@color/sub2"
+            android:hint="Email"
             android:inputType="textEmailAddress"
-            android:layout_marginBottom="16dp" />
+            android:textColor="@color/text"
+            android:textColorHint="@color/sub2" /><![CDATA[
 
         !-- Password -->
+
+
+
+        ]]>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/dateOfBirthEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/text"
+                android:enabled="true"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/text"
+                android:textColorHint="@color/sub2" />
+
+            <ImageView
+                android:id="@+id/calender"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/baseline_calendar_month_24" />
+        </LinearLayout>
+
         <EditText
             android:id="@+id/passwordEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/text"
             android:hint="Password"
             android:inputType="textPassword"
-            android:backgroundTint="@color/text"
             android:textColor="@color/text"
-            android:textColorHint="@color/sub2"
-            android:layout_marginBottom="24dp" />
+            android:textColorHint="@color/sub2" />
 
         !-- Confirm Password -->
+
         <EditText
             android:id="@+id/confirmPasswordEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/text"
             android:hint="Confirm Password"
             android:inputType="textPassword"
-            android:backgroundTint="@color/text"
             android:textColor="@color/text"
-            android:textColorHint="@color/sub2"
-            android:layout_marginBottom="24dp" />
+            android:textColorHint="@color/sub2" />
 
         <!-- Buttons -->
         <Button

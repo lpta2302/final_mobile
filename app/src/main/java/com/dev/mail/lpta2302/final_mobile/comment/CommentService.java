@@ -112,4 +112,41 @@ public class CommentService {
                         }
                 );
     }
+    public void readCommentsById(List<String> commentsId,QueryCallback<List<Comment>> callback){
+        db = FirebaseFirestore.getInstance();
+        CollectionReference dbComments = db.collection("comments");
+
+        dbComments
+                .whereArrayContainsAny("id", commentsId)
+                .get()
+                .addOnCompleteListener((@NonNull Task<QuerySnapshot> task)->{
+                            if(task.isSuccessful()){
+                                List<Comment> comments = task.getResult().toObjects( Comment.class);
+                                AtomicInteger totalComment = new AtomicInteger(comments.size());
+
+                                comments.forEach(comment -> {
+                                    UserService.getInstance().findById(comment.getAuthorId(),
+                                            new QueryCallback<User>() {
+                                                @Override
+                                                public void onSuccess(User expectation) {
+                                                    if(expectation != null){
+                                                        comment.setAuthor((User) expectation);
+                                                    }
+                                                    if(totalComment.decrementAndGet() == 0){
+                                                        callback.onSuccess(comments);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Exception exception) {
+
+                                                }
+                                            }
+                                    );
+                                });
+                            }
+                            else callback.onFailure(task.getException());
+                        }
+                );
+    }
 }

@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!AuthUser.getInstance().isAuthenticated()){
+        if (AuthUser.getInstance().isAuthenticated()){
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
             toolbar = findViewById(R.id.toolbar);

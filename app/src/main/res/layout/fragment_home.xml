@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF"
-    tools:context=".activities.home.HomeFragment">>
+    android:background="@color/main"
+    tools:context=".activities.home.HomeFragment">
 
     <!-- RecyclerView để hiển thị danh sách các bài viết -->
     <androidx.recyclerview.widget.RecyclerView

@@ -1,12 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile.user;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-
-import java.util.Date;
-
-import com.dev.mail.lpta2302.final_mobile.util.Converter.DateConverter;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,18 +12,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class User {
-    @PrimaryKey
+public class User implements Parcelable {
     private String id;
     private String email;
     private String firstName;
     private String lastName;
     private Gender gender;
-    @TypeConverters(DateConverter.class)
-    private Date dateOfBirth;
+    private String dateOfBirth; // Use String for Parcelable
 
-    public User(String email, String firstName, String lastName, Gender gender, Date dateOfBirth) {
+    public User(String email, String firstName, String lastName, Gender gender, String dateOfBirth) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,4 +31,41 @@ public class User {
     public String getFullName() {
         return firstName + " " + lastName;
     }
+
+    // Parcelable implementation
+    protected User(Parcel in) {
+        id = in.readString();
+        email = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+        gender = Gender.valueOf(in.readString());
+        dateOfBirth = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(email);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(gender.name());
+        dest.writeString(dateOfBirth);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

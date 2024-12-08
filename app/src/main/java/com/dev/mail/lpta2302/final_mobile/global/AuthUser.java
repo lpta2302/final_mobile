@@ -13,5 +13,8 @@ public class AuthUser {
     public static final AuthUser instance = new AuthUser();
     private User user;
     private boolean isAuthenticated = false;
-
+    public void createSession(User currentUser){
+        setUser(currentUser);
+        setAuthenticated(true);
+    }
 }
