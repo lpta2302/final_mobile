@@ -3,6 +3,8 @@ package com.dev.mail.lpta2302.final_mobile.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +20,9 @@ public class User implements Parcelable {
     private String firstName;
     private String lastName;
     private Gender gender;
-    private String dateOfBirth; // Use String for Parcelable
+    private LocalDate dateOfBirth; // Use String for Parcelable
 
-    public User(String email, String firstName, String lastName, Gender gender, String dateOfBirth) {
+    public User(String email, String firstName, String lastName, Gender gender, LocalDate dateOfBirth) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,6 +34,14 @@ public class User implements Parcelable {
         return firstName + " " + lastName;
     }
 
+    public String toStringDateOfBirth(){
+        return dateOfBirth.toString();
+    }
+
+    public LocalDate fromStringDateOfBirth(String date){
+        return  LocalDate.parse(date);
+    }
+
     // Parcelable implementation
     protected User(Parcel in) {
         id = in.readString();
@@ -39,7 +49,7 @@ public class User implements Parcelable {
         firstName = in.readString();
         lastName = in.readString();
         gender = Gender.valueOf(in.readString());
-        dateOfBirth = in.readString();
+        dateOfBirth = fromStringDateOfBirth(in.readString());
     }
 
     @Override
@@ -49,7 +59,7 @@ public class User implements Parcelable {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeString(gender.name());
-        dest.writeString(dateOfBirth);
+        dest.writeString(toStringDateOfBirth());
     }
 
     @Override

@@ -94,8 +94,8 @@
                 android:layout_marginBottom="16dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/text"
-                android:enabled="true"
-                android:hint="Email"
+                android:enabled="false"
+                android:hint="Date of Birth"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/text"
                 android:textColorHint="@color/sub2" />

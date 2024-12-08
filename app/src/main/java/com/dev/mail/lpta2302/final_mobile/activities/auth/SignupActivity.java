@@ -26,7 +26,6 @@ import java.util.Date;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText, confirmPasswordEditText, selectedDateTV;
-    private ImageView calenderBtn;
     private LocalDate dateOfBirth;
     private View.OnClickListener pickDate = v->{
 
@@ -72,7 +71,7 @@ public class SignupActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEt);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEt);
         selectedDateTV = findViewById(R.id.dateOfBirthEt);
-        calenderBtn = findViewById(R.id.calender);
+        ImageView calenderBtn = findViewById(R.id.calender);
 
         calenderBtn.setOnClickListener(pickDate);
         calenderBtn.setOnClickListener(pickDate);

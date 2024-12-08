@@ -9,23 +9,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="408dp"
-        android:layout_height="277dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal_background" />
-
-    <Button
-        android:id="@+id/btnChooseImage"
-        android:layout_width="119dp"
-        android:layout_height="46dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="340dp"
-        android:text="Chọn ảnh"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/outline_add_photo_alternate_24" />
 
     <TextView
         android:id="@+id/labelCaption"
@@ -34,7 +24,8 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="390dp"
         android:gravity="center"
-        android:text="Nhập caption"
+        android:text="Caption"
+        android:textColor="@color/sub2"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
