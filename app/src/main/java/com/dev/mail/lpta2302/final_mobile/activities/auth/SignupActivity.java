@@ -74,7 +74,7 @@ public class SignupActivity extends AppCompatActivity {
         ImageView calenderBtn = findViewById(R.id.calender);
 
         calenderBtn.setOnClickListener(pickDate);
-        calenderBtn.setOnClickListener(pickDate);
+        selectedDateTV.setOnClickListener(pickDate);
 
 
         // Set up the signup button
