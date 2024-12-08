@@ -38,29 +38,24 @@ public class Friendship {
         this.status = status;
     }
 
-    public void sendRequest(@Nullable Notification notification, QueryCallback<String> callback) {
+    public void sendRequest(@Nullable OnFriendStatusChange callback) {
         this.status = FriendStatus.PENDING;
-        if (notification != null) NotificationService.getInstance().create(notification, callback);
+        if (callback != null) callback.onChange(status);
     }
 
-    public void acceptRequest(@Nullable Notification notification, QueryCallback<String> callback) {
+    public void acceptRequest(@Nullable OnFriendStatusChange callback) {
         this.status = FriendStatus.ACCEPTED;
         createdAt = LocalDateTime.now();
-
-        if (notification != null) NotificationService.getInstance().create(notification, callback);
+        if (callback != null) callback.onChange(status);
     }
 
-    public void declineRequest(@Nullable Notification notification, QueryCallback<Void> callback) {
+    public void declineRequest(@Nullable OnFriendStatusChange callback) {
         this.status = FriendStatus.DECLINED;
-
-        if (notification != null && notification.getId() != null)
-            NotificationService.getInstance().delete(notification, callback);
+        if (callback != null) callback.onChange(status);
     }
 
-    public void removeFriend(@Nullable Notification notification, QueryCallback<Void> callback) {
+    public void removeFriend(@Nullable OnFriendStatusChange callback) {
         this.status = FriendStatus.REMOVED;
-
-        if (notification != null && notification.getId() != null)
-            NotificationService.getInstance().delete(notification, callback);
+        if (callback != null) callback.onChange(status);
     }
 }

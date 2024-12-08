@@ -1,5 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile;
 
+import android.content.Context;
+
 import com.dev.mail.lpta2302.final_mobile.user.User;
 import com.dev.mail.lpta2302.final_mobile.user.UserService;
 import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
@@ -19,13 +21,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NotificationService {
-    private NotificationService() {}
+    private NotificationService() {
+
+    }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String collectionName = "notifications";
     private final String messageField = "message";
     private final String isReadField = "isRead";
     private final String createdAtField = "createdAt";
     private final String recipientIdField = "recipientId";
+
 
     public static NotificationService getInstance() {
         return new NotificationService();
@@ -142,9 +147,7 @@ public class NotificationService {
         db.collection(collectionName)
                 .document(notification.getId())
                 .set(toMap(notification), SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    callback.onSuccess(null);
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);
     }
 
@@ -152,9 +155,7 @@ public class NotificationService {
         db.collection(collectionName)
                 .document(notification.getId())
                 .delete()
-                .addOnSuccessListener(aVoid -> {
-                    callback.onSuccess(null);
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);
     }
 }
