@@ -1,17 +1,48 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".activities.friends.FriendsFragment">
 
-        <TextView
-            android:id="@+id/textView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lời mời kết bạn"
+            android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/invitation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/sub2"
+                    android:text="Invitation" />
+
+                <Button
+                    android:id="@+id/suggested"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/sub2"
+                    android:text="Suggested" />
+
+                <Button
+                    android:id="@+id/myfriend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/sub2"
+                    android:text="My Friend" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Friends"
+            android:textColor="@color/text"
             android:textSize="25sp" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -19,4 +50,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
+
 </LinearLayout>

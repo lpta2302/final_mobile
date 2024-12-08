@@ -1,5 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile.post;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
@@ -34,6 +36,7 @@ public class PostService {
                 .addOnSuccessListener(documentReference -> {
                     String generatedId = documentReference.getId(); // Lấy ID tự động sinh
                     documentReference.update("id", generatedId);   // Cập nhật ID vào document
+                    Log.d("add", "ok");
 
                     post.setId(generatedId); // Cập nhật ID trong object post hiện tại
                     callback.onSuccess(post);

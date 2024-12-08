@@ -1,10 +1,12 @@
 package com.dev.mail.lpta2302.final_mobile.activities.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,21 +32,33 @@ public class HomeFragment extends Fragment {
         // Khởi tạo RecyclerView và danh sách bài viết
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        postList = new ArrayList<>();
+        postAdapter = new PostAdapter(postList);
+        recyclerView.setAdapter(postAdapter);
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         PostService.getInstance().readPosts(new QueryCallback<List<Post>>() {
             @Override
             public void onSuccess(List<Post> expectation) {
-                // Gán adapter vào RecyclerView
-                postAdapter = new PostAdapter(expectation);
-                recyclerView.setAdapter(postAdapter);
+                Log.d("found",String.valueOf(expectation.size()));
+                postList.clear();
+                postList.addAll(expectation);
+                postAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Exception exception) {
                 postList = new ArrayList<>();
+                postAdapter = new PostAdapter(postList);
+                recyclerView.setAdapter(postAdapter);
             }
         });
-
-        return rootView;
     }
+
+
 }

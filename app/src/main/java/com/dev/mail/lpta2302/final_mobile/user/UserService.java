@@ -1,10 +1,16 @@
 package com.dev.mail.lpta2302.final_mobile.user;
 
+import androidx.annotation.NonNull;
+
+import com.dev.mail.lpta2302.final_mobile.post.Post;
 import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 import com.dev.mail.lpta2302.final_mobile.util.RemoveVietnameseDiacritics;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.time.LocalDate;
@@ -52,6 +58,7 @@ public class UserService {
         String email = documentSnapshot.getString(emailField);
         String firstName = documentSnapshot.getString(firstNameField);
         String lastName = documentSnapshot.getString(lastNameField);
+        String avatar = documentSnapshot.getString("avatar");
         Boolean genderBoolean = documentSnapshot.getBoolean(genderField);
 
         Gender gender;
@@ -65,7 +72,22 @@ public class UserService {
         else
             dateOfBirth = null;
 
-        return new User(id, email, firstName, lastName, gender, dateOfBirth);
+        return new User(id, email, firstName, lastName, gender,avatar, dateOfBirth);
+    }
+    public void readUsers(QueryCallback<List<User>> callback){
+        CollectionReference dbPosts = db.collection("users");
+
+        dbPosts
+            .get()
+            .addOnCompleteListener((@NonNull Task<QuerySnapshot> task)->{
+                        if(task.isSuccessful()){
+                            List<User> users = task.getResult().toObjects(User.class);
+                            callback.onSuccess(users);
+                        }
+                        else
+                            callback.onFailure(task.getException());
+                    }
+            );
     }
 
     public void create(User user, String password, QueryCallback<String> callback) {
@@ -80,6 +102,7 @@ public class UserService {
 
                     String generatedId = newDocument.getId();
                     user.setId(generatedId);
+                    newDocument.update("id",generatedId);
 
                     callback.onSuccess(generatedId);
                 })

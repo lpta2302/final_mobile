@@ -1,61 +1,106 @@
 package com.dev.mail.lpta2302.final_mobile.activities.search;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
+import com.dev.mail.lpta2302.final_mobile.activities.home.PostAdapter;
+import com.dev.mail.lpta2302.final_mobile.post.Post;
+import com.dev.mail.lpta2302.final_mobile.post.PostService;
+import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SearchFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private RecyclerView recyclerView;
+    private PostAdapter postAdapter;
+    private List<Post> postList;
+    private EditText searchEt;
+    private ImageView searchBtn;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        // Initialize RecyclerView and data
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        postList = new ArrayList<>();
+        postAdapter = new PostAdapter(postList);
+        recyclerView.setAdapter(postAdapter);
+
+        // Initialize search components
+        searchEt = rootView.findViewById(R.id.searchEt);
+        searchBtn = rootView.findViewById(R.id.searchBtn);
+
+        // Handle search action
+        searchBtn.setOnClickListener(v -> handleSearch());
+
+        return rootView;
+    }
+
+    private void handleSearch() {
+        String query = searchEt.getText().toString().trim();
+        postList.clear();
+
+        if (TextUtils.isEmpty(query)) {
+            // Clear results if input is empty
+            postList.clear();
+            postAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        if (query.startsWith("#")) {
+            // Extract tags if input contains hashtags
+            String[] tags = query.substring(1, query.length() - 1).split("#");
+            searchByTags(Arrays.asList(tags));
+        } else {
+            // Search by caption if input is plain text
+            searchByCaption(query);
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+    private void searchByTags(List<String> tags) {
+        PostService.getInstance().searchPostsByTags(tags, new QueryCallback<List<Post>>() {
+            @Override
+            public void onSuccess(List<Post> result) {
+                postList.addAll(result);
+                postAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle error, e.g., show a message to the user
+                postAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void searchByCaption(String caption) {
+        PostService.getInstance().searchPostsByCaption(caption, new QueryCallback<List<Post>>() {
+            @Override
+            public void onSuccess(List<Post> result) {
+                postList.addAll(result);
+                postAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle error, e.g., show a message to the user
+                postAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

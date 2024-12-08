@@ -20,6 +20,7 @@ public class User implements Parcelable {
     private String firstName;
     private String lastName;
     private Gender gender;
+    private String avatar;
     private LocalDate dateOfBirth; // Use String for Parcelable
 
     public User(String email, String firstName, String lastName, Gender gender, LocalDate dateOfBirth) {
