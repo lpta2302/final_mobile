@@ -1,5 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile;
 
+import android.content.Context;
+
 import com.dev.mail.lpta2302.final_mobile.user.User;
 import com.dev.mail.lpta2302.final_mobile.user.UserService;
 import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
@@ -19,7 +21,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NotificationService {
-    private NotificationService() {}
+    private NotificationService(Context context) {
+        this.context = context;
+    }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String collectionName = "notifications";
     private final String messageField = "message";
@@ -27,8 +31,10 @@ public class NotificationService {
     private final String createdAtField = "createdAt";
     private final String recipientIdField = "recipientId";
 
-    public static NotificationService getInstance() {
-        return new NotificationService();
+    private final Context context;
+
+    public static NotificationService getInstance(Context context) {
+        return new NotificationService(context);
     }
 
     private Map<String, Object> toMap(Notification notification) {
@@ -56,7 +62,7 @@ public class NotificationService {
 
         String recipientId = documentSnapshot.getString(recipientIdField);
 
-        UserService.getInstance().findById(recipientId, new QueryCallback<>() {
+        UserService.getInstance(context).findById(recipientId, new QueryCallback<>() {
             @Override
             public void onSuccess(User expectation) {
                 Notification notification = new Notification(id, message, isRead, createdAt, expectation);
@@ -142,9 +148,7 @@ public class NotificationService {
         db.collection(collectionName)
                 .document(notification.getId())
                 .set(toMap(notification), SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    callback.onSuccess(null);
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);
     }
 
@@ -152,9 +156,7 @@ public class NotificationService {
         db.collection(collectionName)
                 .document(notification.getId())
                 .delete()
-                .addOnSuccessListener(aVoid -> {
-                    callback.onSuccess(null);
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);
     }
 }

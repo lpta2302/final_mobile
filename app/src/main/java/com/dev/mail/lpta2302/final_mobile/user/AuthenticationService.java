@@ -1,5 +1,11 @@
 package com.dev.mail.lpta2302.final_mobile.user;
 
+import android.content.Context;
+
+import androidx.annotation.Nullable;
+
+import com.dev.mail.lpta2302.final_mobile.signin.SignInSession;
+import com.dev.mail.lpta2302.final_mobile.signin.SignInSessionCacheService;
 import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -10,14 +16,18 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
  * Dịch vụ xác thực quyền. Liên quan đến xác thực mật khẩu, đổi mật khẩu.
  */
 public class AuthenticationService {
-    private AuthenticationService() {}
+    private AuthenticationService(Context context) {
+        this.context = context;
+    }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String userCollection = "users";
     private final String emailField = "email";
     private final String passwordField = "password";
 
-    public static AuthenticationService getInstance() {
-        return new AuthenticationService();
+    private final Context context;
+
+    public static AuthenticationService getInstance(Context context) {
+        return new AuthenticationService(context);
     }
 
     /**
@@ -39,7 +49,9 @@ public class AuthenticationService {
                         if (storedPassword != null) {
                             boolean isPasswordValid = BCrypt.checkpw(password, storedPassword);
                             if (isPasswordValid) {
-                                User user = UserService.getInstance().toUser(doc);
+                                User user = UserService.getInstance(context).toUser(doc);
+
+                                SignInSessionCacheService.getInstance(context).create(user, null);
                                 callback.onSuccess(user);
                             }
                             else callback.onFailure(new Exception("InvalidPassword"));
@@ -53,6 +65,20 @@ public class AuthenticationService {
                     }
                 })
                 .addOnFailureListener(callback::onFailure);
+    }
+
+    /**
+     * Phục hồi lại phiên làm việc trước. Trước khi sử dụng hàm verifySignIn thì nên sử dụng hàm này.
+     * Kết quả trả về là đối tượng user, nếu không có session được lưu thì callback.onFailure được gọi.
+     */
+    public void restoreSignInSession(QueryCallback<User> callback) {
+        SignInSessionCacheService.getInstance(context)
+                .get(callback);
+    }
+
+    public void signOut(QueryCallback<Void> callback) {
+        SignInSessionCacheService.getInstance(context)
+                .clear(callback);
     }
 
     /**

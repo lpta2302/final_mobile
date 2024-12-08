@@ -1,5 +1,8 @@
 package com.dev.mail.lpta2302.final_mobile.mail;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -49,11 +52,10 @@ public class MailService {
 
                 // Send the email
                 Transport.send(message);
-
-                callback.onSuccess();
+                new Handler(Looper.getMainLooper()).post(callback::onSuccess);
             }
             catch (Exception e) {
-                callback.onFailure(e);
+                new Handler(Looper.getMainLooper()).post(() -> callback.onFailure(e));
             }
         }).start();
     }

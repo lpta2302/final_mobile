@@ -1,5 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile.friend;
 
+import android.content.Context;
+
 import com.dev.mail.lpta2302.final_mobile.user.User;
 import com.dev.mail.lpta2302.final_mobile.user.UserService;
 import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
@@ -19,23 +21,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FriendService {
-    private FriendService() {}
+    private FriendService(Context context) {
+        this.context = context;
+    }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String collectionName = "friendships";
-    private final String userId1Field = "userId1";
-    private final String userId2Field = "userId2";
+    private final String user1IdField = "user1Id";
+    private final String user2IdField = "user2Id";
     private final String createdAtField = "createdAt";
     private final String statusField = "status";
 
-    public static FriendService getInstance() {
-        return new FriendService();
+    private final Context context;
+
+    public static FriendService getInstance(Context context) {
+        return new FriendService(context);
     }
 
     private Map<String, Object> toMap(Friendship friendship) {
         Map<String, Object> friendshipMap = new HashMap<>();
 
-        friendshipMap.put(userId1Field, friendship.getUser1().getId());
-        friendshipMap.put(userId2Field, friendship.getUser2().getId());
+        friendshipMap.put(user1IdField, friendship.getUser1().getId());
+        friendshipMap.put(user2IdField, friendship.getUser2().getId());
         Timestamp time = new Timestamp(Date.from(friendship.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant()));
         friendshipMap.put(createdAtField, time);
         friendshipMap.put(statusField, friendship.getStatus().toString());
@@ -45,8 +51,8 @@ public class FriendService {
 
     private void toFriendship(DocumentSnapshot documentSnapshot, QueryCallback<Friendship> callback) {
         String id = documentSnapshot.getId();
-        String userId1 = documentSnapshot.getString(userId1Field);
-        String userId2 = documentSnapshot.getString(userId2Field);
+        String user1Id = documentSnapshot.getString(user1IdField);
+        String user2Id = documentSnapshot.getString(user2IdField);
 
         // Parse status kiểu String từ DB sang FriendStatus.
         String statusString = documentSnapshot.getString(statusField);
@@ -63,11 +69,11 @@ public class FriendService {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime() : null;
 
-        UserService.getInstance().findById(userId1, new QueryCallback<>() {
+        UserService.getInstance(context).findById(user1Id, new QueryCallback<>() {
             @Override
             public void onSuccess(User expectation) {
                 User user1 = expectation;
-                UserService.getInstance().findById(userId2, new QueryCallback<>() {
+                UserService.getInstance(context).findById(user2Id, new QueryCallback<>() {
                     @Override
                     public void onSuccess(User expectation) {
                         Friendship friendship = new Friendship(id, user1, expectation, createdAt, status);
@@ -103,18 +109,14 @@ public class FriendService {
 
     public void findAll(User owner, QueryCallback<List<Friendship>> callback) {
         db.collection(collectionName)
-                .whereEqualTo(userId1Field, owner.getId())
+                .whereEqualTo(user1IdField, owner.getId())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Friendship> friendships = new ArrayList<>();
 
-                    // Dùng để đếm số vòng lặp khi nào đủ để trả kết quả.
                     AtomicInteger processedCount = new AtomicInteger(0);
 
-                    // Dùng để kiểm tra, ngắt vòng lặp khi có lỗi xảy ra.
                     AtomicBoolean hasError = new AtomicBoolean(false);
-
-                    // Tổng số lượng document cần xử lý.
                     int totalDocuments = queryDocumentSnapshots.size();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
@@ -144,9 +146,7 @@ public class FriendService {
         db.collection(collectionName)
                 .document(friendship.getId())
                 .set(toMap(friendship), SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    callback.onSuccess(null);
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);
     }
 
@@ -154,9 +154,7 @@ public class FriendService {
         db.collection(collectionName)
                 .document(friendship.getId())
                 .delete()
-                .addOnSuccessListener(aVoid -> {
-                    callback.onSuccess(null);
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);
     }
 }

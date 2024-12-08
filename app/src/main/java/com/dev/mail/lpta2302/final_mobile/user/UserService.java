@@ -1,10 +1,13 @@
 package com.dev.mail.lpta2302.final_mobile.user;
 
+import android.content.Context;
+
 import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 import com.dev.mail.lpta2302.final_mobile.util.RemoveVietnameseDiacritics;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
 
 import java.time.LocalDate;
@@ -16,7 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 public class UserService {
-    private UserService() {}
+    private UserService(Context context) {
+        this.context = context;
+    }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String collectionName = "users";
     private final String emailField = "email";
@@ -27,8 +32,10 @@ public class UserService {
     private final String genderField = "gender";
     private final String dateOfBirthField = "dateOfBirth";
 
-    public static UserService getInstance() {
-        return new UserService();
+    private final Context context;
+
+    public static UserService getInstance(Context context) {
+        return new UserService(context);
     }
 
     private Map<String, Object> toMap(User user) {
@@ -71,7 +78,7 @@ public class UserService {
     public void create(User user, String password, QueryCallback<String> callback) {
         // Băm mật khẩu trước khi lưu vào DB.
         Map<String, Object> userMap = toMap(user);
-        String hashedPassword = AuthenticationService.getInstance().hashPassword(password);
+        String hashedPassword = AuthenticationService.getInstance(context).hashPassword(password);
         userMap.put(passwordField, hashedPassword);
 
         db.collection(collectionName)
@@ -92,11 +99,25 @@ public class UserService {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists())
-                        callback.onSuccess(toUser(documentSnapshot));
-                    else
-                        callback.onFailure(new Exception("UserNotFound"));
+                    {
+                        User user = toUser(documentSnapshot);
+
+                        // Lưu dữ liệu vào trong cache.
+                        UserCacheService.getInstance(context).insert(user, null);
+                        callback.onSuccess(user);
+                    }
+                    else callback.onFailure(new Exception("UserNotFound"));
                 })
-                .addOnFailureListener(callback::onFailure);
+                .addOnFailureListener(e -> {
+                    // Nếu kết nối firestore bị fail thì sử dụng dữ liệu trong cache.
+                    if (e instanceof FirebaseFirestoreException) {
+                        FirebaseFirestoreException firestoreException = (FirebaseFirestoreException) e;
+
+                        if (firestoreException.getCode() == FirebaseFirestoreException.Code.UNAVAILABLE)
+                            UserCacheService.getInstance(context).findById(id, callback);
+                    }
+                    else callback.onFailure(e);
+                });
     }
 
     public void findByEmail(String email, QueryCallback<User> callback) {
@@ -106,12 +127,25 @@ public class UserService {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                        callback.onSuccess(toUser(documentSnapshot));
+                        User user = toUser(documentSnapshot);
+
+                        // Lưu dữ liệu vào trong cache.
+                        UserCacheService.getInstance(context).insert(user, null);
+                        callback.onSuccess(user);
                     } else {
                         callback.onFailure(new Exception("UserNotFound"));
                     }
                 })
-                .addOnFailureListener(callback::onFailure);
+                .addOnFailureListener(e -> {
+                    // Nếu kết nối firestore bị fail thì sử dụng dữ liệu trong cache.
+                    if (e instanceof FirebaseFirestoreException) {
+                        FirebaseFirestoreException firestoreException = (FirebaseFirestoreException) e;
+
+                        if (firestoreException.getCode() == FirebaseFirestoreException.Code.UNAVAILABLE)
+                            UserCacheService.getInstance(context).findByEmail(email, callback);
+                    }
+                    else callback.onFailure(e);
+                });
     }
 
     public void searchByFullName(String keyword, QueryCallback<List<User>> callback) {
@@ -127,18 +161,28 @@ public class UserService {
                                 .contains(RemoveVietnameseDiacritics.removeDiacritics(keyword).trim()))
                             users.add(toUser(doc));
                     }
+
+                    // Lưu dữ liệu vào trong cache.
+                    UserCacheService.getInstance(context).insertUsers(users, null);
                     callback.onSuccess(users);
                 })
-                .addOnFailureListener(callback::onFailure);
+                .addOnFailureListener(e -> {
+                    // Nếu kết nối firestore bị fail thì sử dụng dữ liệu trong cache.
+                    if (e instanceof FirebaseFirestoreException) {
+                        FirebaseFirestoreException firestoreException = (FirebaseFirestoreException) e;
+
+                        if (firestoreException.getCode() == FirebaseFirestoreException.Code.UNAVAILABLE)
+                            UserCacheService.getInstance(context).searchByFullName(keyword, callback);
+                    }
+                    else callback.onFailure(e);
+                });
     }
 
     public void update(User user, QueryCallback<Void> callback) {
         db.collection(collectionName)
                 .document(user.getId())
                 .set(toMap(user), SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    callback.onSuccess(null);
-                })
+                .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);
     }
 }

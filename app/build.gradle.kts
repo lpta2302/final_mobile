@@ -53,10 +53,18 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    compileOnly("org.projectlombok:lombok:1.18.36")  // Thêm Lombok vào đây
+    // Lombok
+    compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
+
+    // Bcrypt
     implementation("org.springframework.security:spring-security-crypto:5.7.3")
 
+    // Send mail
     implementation("com.sun.mail:android-mail:1.6.7")
     implementation("com.sun.mail:android-activation:1.6.7")
+
+    // Room database
+    implementation("androidx.room:room-runtime:2.5.0")
+    annotationProcessor("androidx.room:room-compiler:2.5.0")
 }

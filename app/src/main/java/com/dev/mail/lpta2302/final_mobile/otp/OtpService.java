@@ -32,7 +32,7 @@ public class OtpService {
         otpSession.startSession(timeoutInSeconds, otpCallback);
 
         String subject = "Mã OTP";
-        String content = "Mã xác thực của bạn là: " + otp + " . Mã sẽ hết hạn sau: " + timeoutInSeconds + " giây.";
+        String content = "Mã xác thực của bạn là: " + otp;
         Mail mail = new Mail(subject, content, emailTo);
 
         MailService.getInstance().sendEmail(mail, sendMailCallback);
