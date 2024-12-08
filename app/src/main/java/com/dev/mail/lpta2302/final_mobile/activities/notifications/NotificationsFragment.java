@@ -1,7 +1,6 @@
 package com.dev.mail.lpta2302.final_mobile.activities.notifications;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dev.mail.lpta2302.final_mobile.NotificationService;
+import com.dev.mail.lpta2302.final_mobile.logic.notification.NotificationService;
 import com.dev.mail.lpta2302.final_mobile.R;
-import com.dev.mail.lpta2302.final_mobile.activities.home.PostAdapter;
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.post.Post;
-import com.dev.mail.lpta2302.final_mobile.post.PostService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +42,9 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NotificationService.getInstance().findAll(AuthUser.instance.getUser(), new QueryCallback<List<com.dev.mail.lpta2302.final_mobile.Notification>>() {
+        NotificationService.getInstance().findAll(AuthUser.instance.getUser(), new QueryCallback<List<com.dev.mail.lpta2302.final_mobile.logic.notification.Notification>>() {
             @Override
-            public void onSuccess(List<com.dev.mail.lpta2302.final_mobile.Notification> expectation) {
+            public void onSuccess(List<com.dev.mail.lpta2302.final_mobile.logic.notification.Notification> expectation) {
 
             }
 

@@ -1,6 +1,5 @@
 package com.dev.mail.lpta2302.final_mobile.activities.addnews;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,16 +13,13 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
-import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
-import com.dev.mail.lpta2302.final_mobile.post.Post;
-import com.dev.mail.lpta2302.final_mobile.post.PostService;
-import com.dev.mail.lpta2302.final_mobile.util.ImageUploadService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.post.Post;
+import com.dev.mail.lpta2302.final_mobile.logic.post.PostService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.ImageUploadService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;

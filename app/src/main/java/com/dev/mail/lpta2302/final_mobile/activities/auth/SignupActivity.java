@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,14 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.user.User;
-import com.dev.mail.lpta2302.final_mobile.user.UserService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.user.User;
+import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText, confirmPasswordEditText, selectedDateTV;

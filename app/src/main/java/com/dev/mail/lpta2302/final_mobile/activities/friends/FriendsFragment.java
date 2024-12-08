@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
-import com.dev.mail.lpta2302.final_mobile.friend.FriendService;
-import com.dev.mail.lpta2302.final_mobile.friend.Friendship;
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.user.User;
-import com.dev.mail.lpta2302.final_mobile.user.UserService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.friend.FriendService;
+import com.dev.mail.lpta2302.final_mobile.logic.friend.Friendship;
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.user.User;
+import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.util.ArrayList;
 import java.util.List;

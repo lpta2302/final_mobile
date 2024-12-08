@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -19,11 +18,11 @@ import androidx.fragment.app.Fragment;
 
 import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.user.Gender;
-import com.dev.mail.lpta2302.final_mobile.user.User;
-import com.dev.mail.lpta2302.final_mobile.user.UserService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.user.Gender;
+import com.dev.mail.lpta2302.final_mobile.logic.user.User;
+import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.time.LocalDate;
 

@@ -28,7 +28,7 @@
             android:name=".activities.auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangePassword"
+            android:name=".activities.auth.ChangePassword"
             android:exported="false" />
         <activity
             android:name=".ManageProfile"

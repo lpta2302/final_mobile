@@ -2,7 +2,6 @@ package com.dev.mail.lpta2302.final_mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,14 +20,10 @@ import com.dev.mail.lpta2302.final_mobile.activities.notifications.Notifications
 import com.dev.mail.lpta2302.final_mobile.activities.options.OptionsFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.search.SearchFragment;
 import com.dev.mail.lpta2302.final_mobile.databinding.ActivityMainBinding;
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.post.Post;
-import com.dev.mail.lpta2302.final_mobile.post.PostService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {

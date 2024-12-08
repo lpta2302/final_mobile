@@ -2,7 +2,6 @@ package com.dev.mail.lpta2302.final_mobile.activities.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
 import com.dev.mail.lpta2302.final_mobile.activities.detail.DetailFragment;
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.post.Post;
-import com.dev.mail.lpta2302.final_mobile.post.PostService;
-import com.dev.mail.lpta2302.final_mobile.user.User;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.post.Post;
+import com.dev.mail.lpta2302.final_mobile.logic.post.PostService;
+import com.dev.mail.lpta2302.final_mobile.logic.user.User;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

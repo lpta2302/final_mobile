@@ -2,32 +2,25 @@ package com.dev.mail.lpta2302.final_mobile.activities.options;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dev.mail.lpta2302.final_mobile.ChangePassword;
 import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
 import com.dev.mail.lpta2302.final_mobile.activities.home.PostAdapter;
-import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
-import com.dev.mail.lpta2302.final_mobile.post.Post;
-import com.dev.mail.lpta2302.final_mobile.post.PostService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
-import com.google.android.material.chip.Chip;
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.post.Post;
+import com.dev.mail.lpta2302.final_mobile.logic.post.PostService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OptionsFragment extends Fragment {

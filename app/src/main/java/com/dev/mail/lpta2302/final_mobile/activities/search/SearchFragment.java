@@ -8,16 +8,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
 import com.dev.mail.lpta2302.final_mobile.activities.home.PostAdapter;
-import com.dev.mail.lpta2302.final_mobile.post.Post;
-import com.dev.mail.lpta2302.final_mobile.post.PostService;
-import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.post.Post;
+import com.dev.mail.lpta2302.final_mobile.logic.post.PostService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
