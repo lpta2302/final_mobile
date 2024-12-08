@@ -3,19 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <ImageView
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/arrow_left"
-            android:layout_marginBottom="16dp"/>
+            android:src="@drawable/arrow_left" />
         <!-- Post Image -->
         <ImageView
             android:id="@+id/postImage"
@@ -29,43 +31,45 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:textSize="16sp"
+            android:layout_marginTop="16dp"
             android:text="Caption"
-            android:layout_marginTop="16dp"/>
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/captionInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/text"
+            android:gravity="top"
             android:hint="Enter caption"
             android:inputType="textMultiLine"
-            android:gravity="top"
             android:lines="4"
             android:padding="12dp"
-            android:backgroundTint="@color/text"
             android:textColor="@color/text"
-            android:textColorHint="@color/sub2"
-            android:layout_marginTop="16dp" />
+            android:textColorHint="@color/sub2" />
 
         <!-- Tags Input -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:textSize="16sp"
+            android:layout_marginTop="16dp"
             android:text="Tags"
-            android:layout_marginTop="16dp"/>
+            android:textColor="@color/text"
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/tagsInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/text"
             android:hint="Enter tags (#-separated)"
             android:inputType="text"
             android:padding="12dp"
-            android:backgroundTint="@color/text"
             android:textColor="@color/text"
-            android:textColorHint="@color/sub2"
-            android:layout_marginTop="16dp" />
+            android:textColorHint="@color/sub2" />
 
         <LinearLayout
             android:layout_width="match_parent"
