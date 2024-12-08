@@ -135,6 +135,7 @@ public class SignupActivity extends AppCompatActivity {
     private void signup(String firstName, String lastName, String email, String password) {
         User user = User
                 .builder()
+                .id("a")
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)

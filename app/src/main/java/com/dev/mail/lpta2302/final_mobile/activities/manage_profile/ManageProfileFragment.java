@@ -1,5 +1,6 @@
 package com.dev.mail.lpta2302.final_mobile.activities.manage_profile;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
+import com.dev.mail.lpta2302.final_mobile.activities.auth.SignupActivity;
 import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
 import com.dev.mail.lpta2302.final_mobile.logic.user.Gender;
 import com.dev.mail.lpta2302.final_mobile.logic.user.User;
@@ -25,6 +28,7 @@ import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
 import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 
 public class ManageProfileFragment extends Fragment {
 
@@ -32,6 +36,37 @@ public class ManageProfileFragment extends Fragment {
     private RadioGroup genderRadioGroup;
     private RadioButton maleRadioButton, femaleRadioButton;
     private Button btnSave, btnLogout;
+    private LocalDate dateOfBirth;
+    private View.OnClickListener pickDate = v->{
+
+        // on below line we are getting
+        // the instance of our calendar.
+        final Calendar c = Calendar.getInstance();
+
+        // on below line we are getting
+        // our day, month and year.
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        // on below line we are creating a variable for date picker dialog.
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                // on below line we are passing context.
+                getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        // on below line we are setting date to our text view.
+                        dateOfBirth = LocalDate.of(year, monthOfYear, dayOfMonth);
+                        dateOfBirthEt.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                    }
+                },
+                year, month, day);
+        datePickerDialog.show();
+
+
+    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

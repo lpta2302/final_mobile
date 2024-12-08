@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(tableName = User.tableName)
 public class User implements Parcelable {
-
     @PrimaryKey
     @NonNull
     private String id;
