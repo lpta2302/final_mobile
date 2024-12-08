@@ -44,7 +44,7 @@ public class UserService {
         userMap.put(firstNameField, user.getFirstName());
         userMap.put(lastNameField, user.getLastName());
         userMap.put(fullNameField, user.getFullName());
-        userMap.put(genderField, user.getGender() == Gender.MALE);
+        userMap.put(genderField, user.getGender());
 
         Date date = Date.from(user.getDateOfBirth().atStartOfDay(ZoneId.systemDefault()).toInstant());
         Timestamp timestamp = new Timestamp(date);
@@ -77,17 +77,17 @@ public class UserService {
     public void readUsers(QueryCallback<List<User>> callback){
         CollectionReference dbPosts = db.collection("users");
 
-        dbPosts
-            .get()
-            .addOnCompleteListener((@NonNull Task<QuerySnapshot> task)->{
-                        if(task.isSuccessful()){
-                            List<User> users = task.getResult().toObjects(User.class);
-                            callback.onSuccess(users);
-                        }
-                        else
-                            callback.onFailure(task.getException());
+        db.collection(collectionName)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    List<User> users = new ArrayList<>();
+                    for (  DocumentSnapshot doc:
+                         documentSnapshot.getDocuments()) {
+                        users.add(toUser(doc));
                     }
-            );
+                    callback.onSuccess(users);
+                })
+                .addOnFailureListener(callback::onFailure);
     }
 
     public void create(User user, String password, QueryCallback<String> callback) {

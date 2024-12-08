@@ -17,9 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.ChangePassword;
-import com.dev.mail.lpta2302.final_mobile.ManageProfile;
+import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
 import com.dev.mail.lpta2302.final_mobile.activities.home.PostAdapter;
+import com.dev.mail.lpta2302.final_mobile.global.AuthUser;
 import com.dev.mail.lpta2302.final_mobile.post.Post;
 import com.dev.mail.lpta2302.final_mobile.post.PostService;
 import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
@@ -65,6 +66,14 @@ public class OptionsFragment extends Fragment {
                 postList = new ArrayList<>();
                 postAdapter = new PostAdapter(postList);
                 recyclerView.setAdapter(postAdapter);
+            }
+        });
+        view.findViewById(R.id.logoutBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AuthUser.getInstance().setUser(null);
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
     }

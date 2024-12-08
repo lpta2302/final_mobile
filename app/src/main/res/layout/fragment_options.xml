@@ -81,8 +81,8 @@
                         android:layout_width="90dp"
                         android:layout_height="40dp"
                         android:backgroundTint="@color/brand"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
+                        android:paddingLeft="0dp"
+                        android:paddingRight="0dp"
                         android:text="Edit"
                         android:textColor="@color/text"
                         app:strokeColor="@color/text" />
@@ -92,8 +92,8 @@
                         android:layout_width="90dp"
                         android:layout_height="40dp"
                         android:backgroundTint="#aa0000"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
+                        android:paddingLeft="0dp"
+                        android:paddingRight="0dp"
                         android:text="Logout"
                         android:textColor="@color/text" />
                 </LinearLayout>

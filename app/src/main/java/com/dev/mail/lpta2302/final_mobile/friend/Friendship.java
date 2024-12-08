@@ -28,6 +28,7 @@ public class Friendship {
     private User user2;
     @Setter
     private LocalDateTime createdAt;
+    @Setter
     private FriendStatus status;
 
     public Friendship(User user1, User user2, LocalDateTime createdAt, FriendStatus status){

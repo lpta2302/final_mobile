@@ -22,6 +22,7 @@ import com.dev.mail.lpta2302.final_mobile.util.QueryCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FriendsFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -108,7 +109,7 @@ public class FriendsFragment extends Fragment {
                         Friendship.builder()
                                 .user1(AuthUser.getInstance().getUser())
                                 .user2(user)
-                                .build()).toList();
+                                .build()).collect(Collectors.toList());
                 friendsList.clear();
                 friendsList.addAll(friendships);
                 friendsAdapter.notifyDataSetChanged();
