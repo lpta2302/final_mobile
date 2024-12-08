@@ -101,7 +101,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void loadSuggestedUsers() {
-        UserService.getInstance().readUsers(new QueryCallback<List<User>>() {
+        UserService.getInstance().findAll(new QueryCallback<List<User>>() {
             @Override
             public void onSuccess(List<User> expectation) {
                 Log.d("Suggested Users", "Found " + expectation.size() + " suggested users");

@@ -87,21 +87,6 @@ public class UserService {
                 .gender(gender)
                 .build();
     }
-    public void readUsers(QueryCallback<List<User>> callback){
-        CollectionReference dbPosts = db.collection("users");
-
-        db.collection(collectionName)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    List<User> users = new ArrayList<>();
-                    for (  DocumentSnapshot doc:
-                         documentSnapshot.getDocuments()) {
-                        users.add(toUser(doc));
-                    }
-                    callback.onSuccess(users);
-                })
-                .addOnFailureListener(callback::onFailure);
-    }
 
     public void create(User user, String password, QueryCallback<String> callback) {
         // Băm mật khẩu trước khi lưu vào DB.
@@ -118,6 +103,19 @@ public class UserService {
                     newDocument.update("id",generatedId);
 
                     callback.onSuccess(generatedId);
+                })
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    public void findAll(QueryCallback<List<User>> callback) {
+        db.collection(collectionName)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> users = new ArrayList<>();
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        users.add(toUser(doc));
+                    }
+                    callback.onSuccess(users);
                 })
                 .addOnFailureListener(callback::onFailure);
     }

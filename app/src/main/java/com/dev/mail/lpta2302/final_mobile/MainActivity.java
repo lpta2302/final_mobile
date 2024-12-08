@@ -2,6 +2,7 @@ package com.dev.mail.lpta2302.final_mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,9 +22,13 @@ import com.dev.mail.lpta2302.final_mobile.activities.options.OptionsFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.search.SearchFragment;
 import com.dev.mail.lpta2302.final_mobile.databinding.ActivityMainBinding;
 import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.user.User;
+import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,6 +73,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        UserService.getInstance().findAll(new QueryCallback<>() {
+            @Override
+            public void onSuccess(List<User> expectation) {
+                for (User user : expectation) {
+                    Log.d("User Email: ", user.getEmail());
+                }
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+                Log.d("User Find All: ", "Failed");
+            }
+        });
+
         if (AuthUser.getInstance().isAuthenticated()){
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());

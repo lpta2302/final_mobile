@@ -1,5 +1,8 @@
 package com.dev.mail.lpta2302.final_mobile.logic.otp;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -70,17 +73,17 @@ public class OtpSession {
                 // Huỷ timer.
                 if (!flag) {
                     scheduler.shutdown();
-                    callback.onBreak(elapsedTime[0]);
+                    new Handler(Looper.getMainLooper()).post(() -> callback.onBreak(elapsedTime[0]));
                 }
                 elapsedTime[0]--;
 
                 // Mỗi lần tick sẽ gọi hàm.
-                callback.onTick(elapsedTime[0]);
+                new Handler(Looper.getMainLooper()).post(() -> callback.onTick(elapsedTime[0]));
 
                 // Timer hoàn thành.
                 if (elapsedTime[0] <= 0) {
                     scheduler.shutdown();
-                    callback.onFinish();
+                    new Handler(Looper.getMainLooper()).post(callback::onFinish);
                 }
             }, 1, interval, TimeUnit.SECONDS);
         }
