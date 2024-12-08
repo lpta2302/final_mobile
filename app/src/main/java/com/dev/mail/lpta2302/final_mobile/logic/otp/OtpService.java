@@ -6,12 +6,12 @@ import com.dev.mail.lpta2302.final_mobile.logic.mail.SendMailCallback;
 
 import java.util.Random;
 
+import lombok.Getter;
+
 public class OtpService {
     private OtpService() {}
-    public static OtpService getInstance() {
-        return new OtpService();
-    }
-
+    @Getter
+    private static final OtpService instance = new OtpService();
     private OtpSession otpSession;
 
     public String generateOtp(int length) {
@@ -40,5 +40,9 @@ public class OtpService {
 
     public boolean verifyOtp(String otp) {
         return otpSession.verify(otp);
+    }
+
+    public void breakOtpSession() {
+        otpSession.breakSession();
     }
 }

@@ -3,6 +3,7 @@ package com.dev.mail.lpta2302.final_mobile.activities.auth;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -10,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
+import com.dev.mail.lpta2302.final_mobile.activities.otp.OtpActivity;
 import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
 import com.dev.mail.lpta2302.final_mobile.logic.user.User;
 import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
@@ -25,6 +29,7 @@ import java.util.Calendar;
 public class SignupActivity extends AppCompatActivity {
     private EditText firstNameEditText, lastNameEditText, emailEditText, passwordEditText, confirmPasswordEditText, selectedDateTV;
     private LocalDate dateOfBirth;
+    public static final String EMAIL_TAG = "email";
     private View.OnClickListener pickDate = v->{
 
                 // on below line we are getting
@@ -52,8 +57,6 @@ public class SignupActivity extends AppCompatActivity {
                         },
                         year, month, day);
                 datePickerDialog.show();
-
-
     };
 
     @Override
@@ -73,7 +76,6 @@ public class SignupActivity extends AppCompatActivity {
 
         calenderBtn.setOnClickListener(pickDate);
         selectedDateTV.setOnClickListener(pickDate);
-
 
         // Set up the signup button
         findViewById(R.id.signUpConfirmButton).setOnClickListener(v -> handleSignup());
@@ -128,9 +130,26 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        signup(firstName, lastName, email, password);
-
+        Intent intent = new Intent(SignupActivity.this, OtpActivity.class);
+        intent.putExtra(EMAIL_TAG, email);
+        startForResult.launch(intent);
     }
+
+    private final ActivityResultLauncher<Intent> startForResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                Intent data = result.getData();
+                if (result.getResultCode() == RESULT_OK && data != null) {
+                    boolean isVerified = data.getBooleanExtra(OtpActivity.OTP_RESULT_TAG, false);
+
+                    String firstName = firstNameEditText.getText().toString().trim();
+                    String lastName = lastNameEditText.getText().toString().trim();
+                    String email = emailEditText.getText().toString().trim();
+                    String password = passwordEditText.getText().toString().trim();
+
+                    if (isVerified) signup(firstName, lastName, email, password);
+                    else Toast.makeText(this, "OTP không chính xác.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     private void signup(String firstName, String lastName, String email, String password) {
         User user = User
@@ -141,8 +160,10 @@ public class SignupActivity extends AppCompatActivity {
                 .email(email)
                 .dateOfBirth(dateOfBirth).build();
 
+        Log.d("CHECKKKKKK", "ONSUCCESS");
+
         UserService.getInstance().create(
-                user, password, new QueryCallback<String>() {
+                user, password, new QueryCallback<>() {
                     @Override
                     public void onSuccess(String expectation) {
                         toMain(user);
