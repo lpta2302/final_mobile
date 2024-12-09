@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post implements Parcelable{
+public class Post{
     private String id;
     private String imageUrl;
     private String caption;
@@ -46,34 +46,4 @@ public class Post implements Parcelable{
         likes = in.createStringArrayList();
         createdAt = new Date(in.readLong());
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(imageUrl);
-        dest.writeString(caption);
-        dest.writeStringList(tags);
-        dest.writeString(authorId);
-        dest.writeParcelable(author, flags);
-        dest.writeStringList(commentIds);
-        dest.writeStringList(likes);
-        dest.writeLong(createdAt != null ? createdAt.getTime() : 0);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Post> CREATOR = new Creator<Post>() {
-        @Override
-        public Post createFromParcel(Parcel in) {
-            return new Post(in);
-        }
-
-        @Override
-        public Post[] newArray(int size) {
-            return new Post[size];
-        }
-    };
 }

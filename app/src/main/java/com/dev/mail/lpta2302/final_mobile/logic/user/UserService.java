@@ -1,6 +1,7 @@
 package com.dev.mail.lpta2302.final_mobile.logic.user;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 import com.dev.mail.lpta2302.final_mobile.logic.util.RemoveVietnameseDiacritics;
@@ -88,7 +89,6 @@ public class UserService {
                 .build();
     }
     public void readUsers(QueryCallback<List<User>> callback){
-        CollectionReference dbPosts = db.collection("users");
 
         db.collection(collectionName)
                 .get()
@@ -98,6 +98,7 @@ public class UserService {
                          documentSnapshot.getDocuments()) {
                         users.add(toUser(doc));
                     }
+                    Log.d("ok","ok");
                     callback.onSuccess(users);
                 })
                 .addOnFailureListener(callback::onFailure);

@@ -44,7 +44,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         Context context = holder.context;
         // Sử dụng hình ảnh avatar1 cho tất cả các bài viết
 
-//        Picasso.get().load(post.getAuthor().getAvatar()).into(holder.authorAvatar);
+        if (post.getAuthor().getAvatar() != null)
+            Picasso.get().load(post.getAuthor().getAvatar()).into(holder.authorAvatar);
         Picasso.get().load(post.getImageUrl()).into(holder.postImage);
         holder.authorName.setText(post.getAuthor().getFullName());
         holder.createdAt.setText(post.formatedDate());
@@ -97,14 +98,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             });
         });
-
-        holder.postImage.setOnClickListener(v->{
-            Intent intent = new Intent(context, DetailFragment.class);
-            intent.putExtra("post", post);
-            context.startActivity(intent);
-        });
-
-
     }
 
     @Override

@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(tableName = User.tableName)
-public class User implements Parcelable {
+public class User{
     @PrimaryKey
     @NonNull
     private String id;
@@ -62,31 +62,4 @@ public class User implements Parcelable {
         gender = Gender.valueOf(in.readString());
         dateOfBirth = fromStringDateOfBirth(in.readString());
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(email);
-        dest.writeString(firstName);
-        dest.writeString(lastName);
-        dest.writeString(gender.name());
-        dest.writeString(toStringDateOfBirth());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 }

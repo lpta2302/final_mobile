@@ -2,6 +2,7 @@ package com.dev.mail.lpta2302.final_mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,14 +17,19 @@ import com.dev.mail.lpta2302.final_mobile.activities.addnews.AddnewsFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.auth.LoginActivity;
 import com.dev.mail.lpta2302.final_mobile.activities.friends.FriendsFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.home.HomeFragment;
+import com.dev.mail.lpta2302.final_mobile.activities.manage_profile.ManageProfileFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.notifications.NotificationsFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.options.OptionsFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.search.SearchFragment;
 import com.dev.mail.lpta2302.final_mobile.databinding.ActivityMainBinding;
 import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
+import com.dev.mail.lpta2302.final_mobile.logic.user.User;
+import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
+import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -75,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
 
             replaceFragment(new HomeFragment());
+
             binding.bottomNavigationView.setBackground(null);
             binding.bottomNavigationView.setOnItemSelectedListener(selectListener);
         } else{
@@ -83,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void replaceFragment(Fragment fragment){
+    public void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);

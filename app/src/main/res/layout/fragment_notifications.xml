@@ -8,10 +8,13 @@
     tools:context=".activities.notifications.NotificationsFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/notificationts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Thông báo" />
+        android:layout_marginBottom="12dp"
+        android:text="Notification"
+        android:textColor="@color/text"
+        android:textSize="20sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_notifications"

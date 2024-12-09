@@ -11,6 +11,12 @@ android {
     dataBinding{
         enable=true
     }
+    buildFeatures {
+        viewBinding = true
+    }
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
     namespace = "com.dev.mail.lpta2302.final_mobile"
     compileSdk = 34
 

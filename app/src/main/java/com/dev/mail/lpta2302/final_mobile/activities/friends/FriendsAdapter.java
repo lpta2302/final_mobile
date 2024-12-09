@@ -16,6 +16,7 @@ import com.dev.mail.lpta2302.final_mobile.R;
 import com.dev.mail.lpta2302.final_mobile.logic.friend.FriendService;
 import com.dev.mail.lpta2302.final_mobile.logic.friend.FriendStatus;
 import com.dev.mail.lpta2302.final_mobile.logic.friend.Friendship;
+import com.dev.mail.lpta2302.final_mobile.logic.friend.OnFriendStatusChange;
 import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
 import com.dev.mail.lpta2302.final_mobile.logic.user.User;
 import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
@@ -23,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsViewHolder> {
 
@@ -64,19 +66,39 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
 
                 holder.acceptBtn.setOnClickListener(v -> {
                     Toast.makeText(holder.context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
-                    acceptFriendship(friendship);
+                    acceptFriendship(friendship,position);
                 });
 
                 holder.declineBtn.setOnClickListener(v -> {
                     Toast.makeText(holder.context, "Declined Friend Request", Toast.LENGTH_SHORT).show();
-                    declineFriendship(friendship);
+                    declineFriendship(friendship, position);
                 });
-            } else {
+            } else{
                 // Hide buttons if no longer pending
                 holder.acceptBtn.setVisibility(View.GONE);
-                holder.declineBtn.setVisibility(View.GONE);
+                holder.declineBtn.setVisibility(View.VISIBLE);
+                holder.declineBtn.setText("Unfriend");
+
+                holder.declineBtn.setOnClickListener(v -> {
+                    Toast.makeText(holder.context, "Unfriend Successfully", Toast.LENGTH_SHORT).show();
+                    FriendService.getInstance().delete(friendship, new QueryCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void expectation) {
+                            List<Friendship> frs= AuthUser.getInstance().getFriends().stream().filter(f->!f.getId().equals(friendship.getId())).collect(Collectors.toList());
+                            AuthUser.getInstance().getFriends().clear();
+                            AuthUser.getInstance().getFriends().addAll(frs);
+                            friendsList.remove(position);
+                            notifyItemChanged(position);
+                        }
+
+                        @Override
+                        public void onFailure(Exception exception) {
+
+                        }
+                    });
+                });
             }
-        } else if(friendship.getUser2().getId().equals(AuthUser.getInstance().getUser().getId())) {
+        } else {
             // If not a friend, show only "Add Friend"
             holder.acceptBtn.setVisibility(View.GONE);
             holder.declineBtn.setVisibility(View.VISIBLE);
@@ -94,12 +116,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
         return friendsList.size();
     }
 
-    private void acceptFriendship(Friendship friendship) {
+    private void acceptFriendship(Friendship friendship, int position) {
         // Handle accepting logic here
         friendship.setStatus(FriendStatus.ACCEPTED);
         FriendService.getInstance().update(friendship, new QueryCallback<Void>() {
             @Override
             public void onSuccess(Void expectation) {
+                AuthUser.getInstance().getFriends().forEach(f->{if (friendship.getId().equals(f.getId())) f.setStatus(FriendStatus.ACCEPTED);});
                 notifyDataSetChanged();
             }
 
@@ -110,13 +133,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
         });
     }
 
-    private void declineFriendship(Friendship friendship) {
+    private void declineFriendship(Friendship friendship, int position) {
         // Handle declining logic here
-        friendsList.remove(friendship);
         friendship.setStatus(FriendStatus.DECLINED);
         FriendService.getInstance().update(friendship, new QueryCallback<Void>() {
             @Override
             public void onSuccess(Void expectation) {
+                AuthUser.getInstance().getFriends().forEach(f->{if (friendship.getId() == f.getId()) f.setStatus(FriendStatus.DECLINED);});
                 notifyDataSetChanged();
             }
 
@@ -128,10 +151,26 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
     }
 
     private void sendFriendRequest(User user) {
-        FriendService.getInstance().create(new Friendship(AuthUser.getInstance().getUser(), user, LocalDateTime.now(), FriendStatus.PENDING), new QueryCallback<String>() {
+        Friendship friendship =
+        Friendship
+            .builder()
+            .user1(AuthUser.getInstance().getUser())
+            .user2(user)
+            .createdAt(LocalDateTime.now())
+                .status(FriendStatus.PENDING)
+            .build();
+        FriendService.getInstance().create(friendship, new QueryCallback<String>() {
             @Override
             public void onSuccess(String expectation) {
-                notifyDataSetChanged();
+                friendship
+                        .sendRequest(new OnFriendStatusChange() {
+                            @Override
+                            public void onChange(FriendStatus status) {
+                                friendship.setStatus(status);
+                                AuthUser.getInstance().getFriends().add(friendship);
+                                notifyDataSetChanged();
+                            }
+                        });
             }
 
             @Override

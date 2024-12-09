@@ -26,8 +26,8 @@ public class FriendService {
     }
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String collectionName = "friendships";
-    private final String user1IdField = "user1Id";
-    private final String user2IdField = "user2Id";
+    private final String user1IdField = "userId1";
+    private final String user2IdField = "userId2";
     private final String createdAtField = "createdAt";
     private final String statusField = "status";
 
