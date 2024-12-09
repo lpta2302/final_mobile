@@ -1,6 +1,12 @@
 package com.dev.mail.lpta2302.final_mobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.LinkProperties;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -74,20 +80,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UserService.getInstance().findAll(new QueryCallback<>() {
-            @Override
-            public void onSuccess(List<User> expectation) {
-                for (User user : expectation) {
-                    Log.d("User Email: ", user.getEmail());
-                }
-            }
-
-            @Override
-            public void onFailure(Exception exception) {
-                Log.d("User Find All: ", "Failed");
-            }
-        });
-
         if (AuthUser.getInstance().isAuthenticated()){
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
@@ -101,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class); //add login acctivity to change
             startActivity(intent);
         }
+
+        checkConnection();
     }
 
     private void replaceFragment(Fragment fragment){
@@ -110,4 +104,33 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    private void checkConnection() {
+        String TAG = "INTERNET";
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+
+        connectivityManager.registerNetworkCallback(request, new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                Log.e(TAG, "The default network is now: " + network);
+            }
+
+            @Override
+            public void onLost(Network network) {
+                Log.e(TAG, "The application no longer has a default network. The last default network was " + network);
+            }
+
+            @Override
+            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+                Log.e(TAG, "The default network changed capabilities: " + networkCapabilities);
+            }
+
+            @Override
+            public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
+                Log.e(TAG, "The default network changed link properties: " + linkProperties);
+            }});
+    }
 }

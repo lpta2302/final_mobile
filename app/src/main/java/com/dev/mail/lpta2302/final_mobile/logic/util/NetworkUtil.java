@@ -5,32 +5,35 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+
+import com.dev.mail.lpta2302.final_mobile.MainActivity;
 
 public class NetworkUtil {
 
     public static void checkInternetConnection(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if (connectivityManager != null) {
-            NetworkRequest networkRequest = new NetworkRequest.Builder()
-                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                    .build();
-
-            connectivityManager.registerNetworkCallback(networkRequest, new ConnectivityManager.NetworkCallback() {
-                @Override
-                public void onAvailable(@NonNull Network network) {
-                    super.onAvailable(network);
-                    // Có kết nối internet
-                }
-
-                @Override
-                public void onLost(@NonNull Network network) {
-                    super.onLost(network);
-                    // Mất kết nối internet
-                }
-            });
-        }
+//        connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
+//            @Override
+//            public void onAvailable(Network network) {
+//                Log.e(TAG, "The default network is now: " + network);
+//            }
+//
+//            @Override
+//            public void onLost(Network network) {
+//                Log.e(TAG, "The application no longer has a default network. The last default network was " + network);
+//            }
+//
+//            @Override
+//            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+//                Log.e(TAG, "The default network changed capabilities: " + networkCapabilities);
+//            }
+//
+//            @Override
+//            public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
+//                Log.e(TAG, "The default network changed link properties: " + linkProperties);
+//            }
+//        });
     }
 }

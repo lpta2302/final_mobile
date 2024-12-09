@@ -31,7 +31,7 @@ public class OtpService {
         otpSession = new OtpSession(otp);
         otpSession.startSession(timeoutInSeconds, otpCallback);
 
-        String subject = "Mã OTP";
+        String subject = "Mã OTP - Mobile App";
         String content = "Mã xác thực của bạn là: " + otp;
         Mail mail = new Mail(subject, content, emailTo);
 
