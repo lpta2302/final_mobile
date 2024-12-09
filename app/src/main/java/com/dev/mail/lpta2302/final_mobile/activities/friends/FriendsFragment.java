@@ -65,16 +65,13 @@ public class FriendsFragment extends Fragment {
                                 !user.getId().equals(AuthUser.getInstance().getUser().getId()) &&
                                 !AuthUser.getInstance().getFriends().stream().anyMatch(fr->fr.getUser2().getId().equals(user.getId())))
                         .map(user->Friendship.builder()
-                                .user1(AuthUser.getInstance().getUser())
-                                .user2(user)
+                                .user1(user)
+                                .user2(AuthUser.getInstance().getUser())
                                 .build()
                 ).collect(Collectors.toList());
 
                 // Set button click listeners
                 setupButtonListeners();
-
-                // Load default view
-                loadInvitations();
             }
 
             @Override
@@ -119,8 +116,10 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onSuccess(List<Friendship> expectation) {
                 Log.d("Invitations", "Found " + expectation.size() + " invitations");
-                expectation = expectation.stream().filter(f->f.getStatus() == FriendStatus.PENDING && !f.getUser1().getId().equals(AuthUser.getInstance().getUser().getId())).collect(Collectors.toList());
-                friendsList.clear();
+                expectation = expectation.stream()
+                        .filter(f -> f.getStatus() == FriendStatus.PENDING // Check if status is PENDING
+                                && !f.getUser1().getId().equals(AuthUser.getInstance().getUser().getId())) // Check if user1's id is not the current user's id
+                        .collect(Collectors.toList());                friendsList.clear();
                 friendsList.addAll(expectation);
                 friendsAdapter.notifyDataSetChanged();
             }
