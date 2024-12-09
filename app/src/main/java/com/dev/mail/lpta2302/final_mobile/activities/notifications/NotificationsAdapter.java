@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dev.mail.lpta2302.final_mobile.R;
+import com.dev.mail.lpta2302.final_mobile.logic.notification.Notification;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -28,9 +30,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(@NonNull NotificationsViewHolder holder, int position) {
         Notification notification = notificationList.get(position);
-        holder.textViewFriend.setText(notification.getName());
-        holder.textViewNotification.setText(notification.getNotification());
-        holder.imageViewAvatar.setImageResource(notification.getAvatarResId());
+        holder.textViewNotification.setText(notification.getMessage());
+        if(notification.getRecipient()!= null){
+            if(notification.getRecipient().getAvatar() != null){
+                Picasso.get().load(notification.getRecipient().getAvatar()).into(holder.imageViewAvatar);
+            }
+            holder.textViewFriend.setText(notification.getRecipient().getFullName());
+        }
     }
 
     @Override
@@ -38,7 +44,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return notificationList.size();
     }
 
-    static class NotificationsViewHolder extends RecyclerView.ViewHolder {
+    public static class NotificationsViewHolder extends RecyclerView.ViewHolder {
         TextView textViewNotification, textViewFriend;
         ImageView imageViewAvatar;
 

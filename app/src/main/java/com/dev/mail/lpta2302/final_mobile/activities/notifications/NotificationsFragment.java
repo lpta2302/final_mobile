@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dev.mail.lpta2302.final_mobile.logic.notification.Notification;
 import com.dev.mail.lpta2302.final_mobile.logic.notification.NotificationService;
 import com.dev.mail.lpta2302.final_mobile.R;
 import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
@@ -45,7 +46,8 @@ public class NotificationsFragment extends Fragment {
         NotificationService.getInstance().findAll(AuthUser.instance.getUser(), new QueryCallback<List<com.dev.mail.lpta2302.final_mobile.logic.notification.Notification>>() {
             @Override
             public void onSuccess(List<com.dev.mail.lpta2302.final_mobile.logic.notification.Notification> expectation) {
-
+                notificationList.clear();
+                notificationList.addAll(expectation);
             }
 
             @Override
