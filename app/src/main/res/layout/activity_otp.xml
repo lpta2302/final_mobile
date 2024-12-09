@@ -7,7 +7,7 @@
     android:gravity="center"
     android:padding="16dp"
     tools:context=".activities.otp.OtpActivity"
-    android:background="#FFFFFF">
+    android:background="@color/main">
 
     <!-- Logo của ứng dụng -->
 
@@ -27,7 +27,7 @@
         android:text="OTP sent to: "
         android:textSize="16sp"
         android:layout_marginBottom="24dp"
-        android:textColor="#333333" />
+        android:textColor="@color/text" />
     <!-- Thời gian đếm ngược -->
     <!-- Trường nhập mã OTP -->
     <TextView
@@ -48,7 +48,9 @@
         android:maxLength="6"
         android:gravity="center"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#0288D1" />
+        android:backgroundTint="@color/text"
+        android:textColor="@color/text"
+        android:textColorHint="@color/sub2" />
 
     <!-- Nút xác nhận OTP -->
     <Button
@@ -56,7 +58,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Verify OTP"
-        android:backgroundTint="#0288D1"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="16dp" />
 
@@ -66,6 +67,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Back"
-        android:backgroundTint="#999999"
+        android:backgroundTint="@color/main"
         android:textColor="#FFFFFF" />
 </LinearLayout>

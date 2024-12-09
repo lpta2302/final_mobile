@@ -58,8 +58,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:backgroundTint="@color/text"
                 android:hint="Last Name"
+                android:backgroundTint="@color/text"
                 android:textColor="@color/text"
                 android:textColorHint="@color/sub2" />
         </LinearLayout>
