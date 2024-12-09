@@ -62,6 +62,7 @@ public class FriendsFragment extends Fragment {
             public void onSuccess(List<User> expectation) {
                 Log.d("Suggested Users", "Found " + expectation.size() + " suggested users");
                 suggestedUsers = expectation.stream().filter(user->
+                                !user.getId().equals(AuthUser.getInstance().getUser().getId()) &&
                                 !AuthUser.getInstance().getFriends().stream().anyMatch(fr->fr.getUser2().getId().equals(user.getId())))
                         .map(user->Friendship.builder()
                                 .user1(AuthUser.getInstance().getUser())

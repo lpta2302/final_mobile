@@ -37,7 +37,7 @@ public class SearchFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(postList);
+        postAdapter = new PostAdapter(postList, getParentFragmentManager());
         recyclerView.setAdapter(postAdapter);
 
         // Initialize search components

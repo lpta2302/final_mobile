@@ -37,7 +37,7 @@ public class LikedFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(postList);
+        postAdapter = new PostAdapter(postList, getParentFragmentManager());
         recyclerView.setAdapter(postAdapter);
 
         return rootView;
@@ -59,7 +59,7 @@ public class LikedFragment extends Fragment {
             @Override
             public void onFailure(Exception exception) {
                 postList = new ArrayList<>();
-                postAdapter = new PostAdapter(postList);
+                postAdapter = new PostAdapter(postList, getParentFragmentManager());
                 recyclerView.setAdapter(postAdapter);
             }
         });

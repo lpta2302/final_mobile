@@ -24,6 +24,7 @@ import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddnewsFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1001;
@@ -80,7 +81,10 @@ public class AddnewsFragment extends Fragment {
         }
 
         // Parse tags (comma-separated into a list)
-        List<String> tags = Arrays.asList(tagsString.split(",\\s*"));
+        List<String> tags = Arrays.asList(tagsString.split("#"))
+                .stream()
+                .filter(tag -> !tag.isEmpty()) // Remove empty entries if any
+                .collect(Collectors.toList());
 
         // Create a Post object
         post = Post.builder()

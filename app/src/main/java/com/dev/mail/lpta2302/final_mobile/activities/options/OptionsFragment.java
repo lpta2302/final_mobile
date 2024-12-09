@@ -42,7 +42,7 @@ public class OptionsFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(postList);
+        postAdapter = new PostAdapter(postList, getParentFragmentManager());
         recyclerView.setAdapter(postAdapter);
         TextView nameTv = rootView.findViewById(R.id.nameTv);
         TextView emailTv = rootView.findViewById(R.id.emailTv);
@@ -84,7 +84,7 @@ public class OptionsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        PostService.getInstance().readPosts(new QueryCallback<List<Post>>() {
+        PostService.getInstance().searchPostByUser(AuthUser.getInstance().getUser().getId(),new QueryCallback<List<Post>>() {
             @Override
             public void onSuccess(List<Post> expectation) {
                 Log.d("found",String.valueOf(expectation.size()));
@@ -96,7 +96,7 @@ public class OptionsFragment extends Fragment {
             @Override
             public void onFailure(Exception exception) {
                 postList = new ArrayList<>();
-                postAdapter = new PostAdapter(postList);
+                postAdapter = new PostAdapter(postList, getParentFragmentManager());
                 recyclerView.setAdapter(postAdapter);
             }
         });

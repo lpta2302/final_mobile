@@ -76,6 +76,14 @@
         android:text="TextView"
         android:textColor="@color/text" />
 
+    <TextView
+        android:id="@+id/tagTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:textColor="@color/text" />
+
     <ImageView
         android:id="@+id/postImage"
         android:layout_width="match_parent"

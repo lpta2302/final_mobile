@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +27,13 @@ public class HomeFragment extends Fragment {
     private PostAdapter postAdapter;
     private List<Post> postList;
 
+    public void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
@@ -33,7 +42,7 @@ public class HomeFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(postList);
+        postAdapter = new PostAdapter(postList, getParentFragmentManager());
         recyclerView.setAdapter(postAdapter);
 
         return rootView;
@@ -54,7 +63,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Exception exception) {
                 postList = new ArrayList<>();
-                postAdapter = new PostAdapter(postList);
+                postAdapter = new PostAdapter(postList, getParentFragmentManager());
                 recyclerView.setAdapter(postAdapter);
             }
         });
