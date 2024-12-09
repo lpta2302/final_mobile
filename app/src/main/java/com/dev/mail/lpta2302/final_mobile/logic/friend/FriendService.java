@@ -106,7 +106,7 @@ public class FriendService {
 
     public void findAll(User owner, QueryCallback<List<Friendship>> callback) {
         db.collection(collectionName)
-                .whereEqualTo(user1IdField, owner.getId())
+                .whereEqualTo(user2IdField, owner.getId())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Friendship> friendships = new ArrayList<>();

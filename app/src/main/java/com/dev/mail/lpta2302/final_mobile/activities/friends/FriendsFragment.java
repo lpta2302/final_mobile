@@ -118,7 +118,7 @@ public class FriendsFragment extends Fragment {
                 Log.d("Invitations", "Found " + expectation.size() + " invitations");
                 expectation = expectation.stream()
                         .filter(f -> f.getStatus() == FriendStatus.PENDING // Check if status is PENDING
-                                && !f.getUser2().getId().equals(AuthUser.getInstance().getUser().getId())) // Check if user1's id is not the current user's id
+                                && !f.getUser1().getId().equals(AuthUser.getInstance().getUser().getId())) // Check if user1's id is not the current user's id
                         .collect(Collectors.toList());                friendsList.clear();
                 friendsList.addAll(expectation);
                 friendsAdapter.notifyDataSetChanged();

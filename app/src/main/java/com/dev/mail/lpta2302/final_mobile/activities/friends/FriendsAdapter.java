@@ -45,13 +45,21 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendsV
     public void onBindViewHolder(@NonNull FriendsViewHolder holder, int position) {
         Friendship friendship = friendsList.get(position);
         User user = friendship.getUser2();
+        User user1 = friendship.getUser1();
 
         // Load friend's name and avatar
-        holder.textViewFriend.setText(user.getFullName());
+
+        if(user1.getId().equals(AuthUser.getInstance().getUser().getId()))
+            holder.textViewFriend.setText(user.getFullName());
+        else
+            holder.textViewFriend.setText(user1.getFullName());
         if (user.getAvatar() == null) {
             holder.imageViewAvatar.setImageResource(R.drawable.ic_launcher_foreground);
         } else {
-            Picasso.get().load(user.getAvatar()).into(holder.imageViewAvatar);
+            if(user1.getId().equals(AuthUser.getInstance().getUser().getId()))
+                Picasso.get().load(user.getAvatar()).into(holder.imageViewAvatar);
+            else
+                Picasso.get().load(user1.getAvatar()).into(holder.imageViewAvatar);
         }
 
         // Check if this user is already a friend in `AuthUser.getInstance().getFriends()`
