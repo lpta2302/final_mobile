@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.dev.mail.lpta2302.final_mobile.activities.LikedFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.addnews.AddnewsFragment;
 import com.dev.mail.lpta2302.final_mobile.activities.auth.LoginActivity;
 import com.dev.mail.lpta2302.final_mobile.activities.friends.FriendsFragment;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             if(id == R.id.home)
                 replaceFragment(new HomeFragment());
             if(id == R.id.liked)
-                replaceFragment(new HomeFragment());
+                replaceFragment(new LikedFragment());
             if(id == R.id.friends)
                 replaceFragment(new FriendsFragment());
             if(id == R.id.create)

@@ -127,6 +127,9 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onFailure(Exception exception) {
                 Log.e("Invitations", "Error loading invitations", exception);
+                friendsList.clear();
+                friendsList.addAll(new ArrayList<>());
+                friendsAdapter.notifyDataSetChanged();
             }
         });
     }
