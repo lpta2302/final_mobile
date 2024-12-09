@@ -74,6 +74,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        UserService.getInstance().findAll(new QueryCallback<>() {
+            @Override
+            public void onSuccess(List<User> expectation) {
+                for (User user : expectation) {
+                    Log.d("User Email: ", user.getEmail());
+                }
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+                Log.d("User Find All: ", "Failed");
+            }
+        });
+
         if (AuthUser.getInstance().isAuthenticated()){
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());

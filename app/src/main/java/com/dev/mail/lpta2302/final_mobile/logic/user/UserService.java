@@ -3,6 +3,7 @@ package com.dev.mail.lpta2302.final_mobile.logic.user;
 import android.content.Context;
 import android.util.Log;
 
+import com.dev.mail.lpta2302.final_mobile.logic.global.AuthUser;
 import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
 import com.dev.mail.lpta2302.final_mobile.logic.util.RemoveVietnameseDiacritics;
 import com.google.firebase.Timestamp;
@@ -51,6 +52,7 @@ public class UserService {
         userMap.put(firstNameField, user.getFirstName());
         userMap.put(lastNameField, user.getLastName());
         userMap.put(fullNameField, user.getFullName());
+        userMap.put("avatar", user.getAvatar());
         userMap.put(genderField, user.getGender() == Gender.MALE);
 
         Date date = Date.from(user.getDateOfBirth().atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -89,6 +91,7 @@ public class UserService {
                 .build();
     }
     public void readUsers(QueryCallback<List<User>> callback){
+        CollectionReference dbPosts = db.collection("users");
 
         db.collection(collectionName)
                 .get()
@@ -98,7 +101,6 @@ public class UserService {
                          documentSnapshot.getDocuments()) {
                         users.add(toUser(doc));
                     }
-                    Log.d("ok","ok");
                     callback.onSuccess(users);
                 })
                 .addOnFailureListener(callback::onFailure);
@@ -119,6 +121,19 @@ public class UserService {
                     newDocument.update("id",generatedId);
 
                     callback.onSuccess(generatedId);
+                })
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    public void findAll(QueryCallback<List<User>> callback) {
+        db.collection(collectionName)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> users = new ArrayList<>();
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        users.add(toUser(doc));
+                    }
+                    callback.onSuccess(users);
                 })
                 .addOnFailureListener(callback::onFailure);
     }
@@ -213,7 +228,7 @@ public class UserService {
 
     public void update(User user, QueryCallback<Void> callback) {
         db.collection(collectionName)
-                .document(user.getId())
+                .document(AuthUser.getInstance().getUser().getId())
                 .set(toMap(user), SetOptions.merge())
                 .addOnSuccessListener(aVoid -> callback.onSuccess(null))
                 .addOnFailureListener(callback::onFailure);

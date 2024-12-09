@@ -32,6 +32,7 @@ import com.dev.mail.lpta2302.final_mobile.logic.user.User;
 import com.dev.mail.lpta2302.final_mobile.logic.user.UserService;
 import com.dev.mail.lpta2302.final_mobile.logic.util.ImageUploadService;
 import com.dev.mail.lpta2302.final_mobile.logic.util.QueryCallback;
+import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -132,6 +133,10 @@ public class ManageProfileFragment extends Fragment {
             } else if (currentUser.getGender() == Gender.FEMALE) {
                 femaleRadioButton.setChecked(true);
             }
+
+            if (currentUser.getAvatar() != null){
+                Picasso.get().load(currentUser.getAvatar()).into(addImage);
+            }
         }
     }
 
@@ -146,8 +151,7 @@ public class ManageProfileFragment extends Fragment {
             return;
         }
 
-        User updatedUser = new User();
-        updatedUser.setEmail(email);
+        User updatedUser = AuthUser.getInstance().getUser();
         updatedUser.setFirstName(firstName);
         updatedUser.setLastName(lastName);
         updatedUser.setDateOfBirth(dateOfBirth);
@@ -161,6 +165,7 @@ public class ManageProfileFragment extends Fragment {
             @Override
             public void onSuccess(String imageUrl) {
                 user.setAvatar(imageUrl);
+                AuthUser.getInstance().getUser().setAvatar(imageUrl);
                 UserService.getInstance().update(user, new QueryCallback<Void>() {
                     @Override
                     public void onSuccess(Void expectation) {

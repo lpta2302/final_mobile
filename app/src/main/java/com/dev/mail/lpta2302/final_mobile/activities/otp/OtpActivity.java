@@ -8,19 +8,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.dev.mail.lpta2302.final_mobile.MainActivity;
 import com.dev.mail.lpta2302.final_mobile.R;
+import com.dev.mail.lpta2302.final_mobile.activities.auth.SignupActivity;
+import com.dev.mail.lpta2302.final_mobile.logic.mail.SendMailCallback;
+import com.dev.mail.lpta2302.final_mobile.logic.otp.OtpService;
+import com.dev.mail.lpta2302.final_mobile.logic.otp.OtpTimerCallback;
 
 public class OtpActivity extends AppCompatActivity {
 
     private long timeLeftInMillis = 60000; // 60 giây
     private TextView timerTextView;
+    public static final String OTP_RESULT_TAG = "result";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class OtpActivity extends AppCompatActivity {
         timerTextView = findViewById(R.id.timerTextView);
 
         // Bắt đầu đếm ngược
-        startCountdownTimer();
+        // startCountdownTimer();
 
         // Nút xác minh OTP
         Button verifyOtpButton = findViewById(R.id.verifyOtpButton);
@@ -51,27 +52,60 @@ public class OtpActivity extends AppCompatActivity {
 
             if (otp.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập mã OTP", Toast.LENGTH_SHORT).show();
-            } else if (otp.length() != 6) {
-                Toast.makeText(this, "Định dạng mã OTP không hợp lệ", Toast.LENGTH_SHORT).show();
             } else {
-                // Giả lập logic xác minh OTP
-                if (otp.equals("123456")) { // Giả sử mã OTP hợp lệ là "123456"
-                    Toast.makeText(this, "Xác minh OTP thành công", Toast.LENGTH_SHORT).show();
-
-                    // Chuyển sang màn hình chính
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
+                if (OtpService.getInstance().verifyOtp(otp)) {
+                    sendResult(true);
                 } else {
                     Toast.makeText(this, "Mã OTP không đúng. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        Intent intent = getIntent();
+        String email = intent.getStringExtra(SignupActivity.EMAIL_TAG);
+
+        OtpService.getInstance().startOtpSession(email, 120, new OtpTimerCallback() {
+            @Override
+            public void onTick(int currentSecond) {
+                int minutes = currentSecond / 60;
+                int remainingSeconds = currentSecond % 60;
+                String timeText = "Thời gian còn lại: " + String.format("%02d:%02d", minutes, remainingSeconds);
+                timerTextView.setText(timeText);
+            }
+
+            @Override
+            public void onFinish() {
+                sendResult(true);
+            }
+
+            @Override
+            public void onBreak(int currentSecond) {}
+        }, new SendMailCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getApplicationContext(), "Mã OTP đã gửi đến hộp thư của bạn.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+                OtpService.getInstance().breakOtpSession();
+                sendResult(false);
+            }
+        });
+
         // Nút quay lại
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
-            finish(); // Kết thúc Activity và quay lại màn hình trước đó
+            OtpService.getInstance().breakOtpSession();
+            sendResult(false);
         });
+    }
+
+    private void sendResult(boolean result) {
+        Intent resultIntend = new Intent();
+        resultIntend.putExtra(OTP_RESULT_TAG, result);
+        setResult(RESULT_OK, resultIntend);
+        finish();
     }
 
     private void startCountdownTimer() {

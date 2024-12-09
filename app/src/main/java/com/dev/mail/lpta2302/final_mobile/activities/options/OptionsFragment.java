@@ -52,7 +52,7 @@ public class OptionsFragment extends Fragment {
         if(AuthUser.getInstance().getUser().getAvatar() == null){
             avatarIv.setImageResource(R.drawable.logo);
         } else {
-            Picasso.get().load(AuthUser.getInstance().getUser().getAvatar());
+            Picasso.get().load(AuthUser.getInstance().getUser().getAvatar()).into(avatarIv);
         }
 
         rootView.findViewById(R.id.logoutBtn).setOnClickListener(new View.OnClickListener() {
